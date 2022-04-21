@@ -19,7 +19,7 @@ object Deps {
             val testJs get() = "org.jetbrains.kotlin:kotlin-test-js:$VERSION"
             val testAnnotationsCommon get() = "org.jetbrains.kotlin:kotlin-test-annotations-common:$VERSION"
 
-            val coroutines get() = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$1.6.0"
+            val coroutines get() = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0"
         }
 
         object Compose {
@@ -55,6 +55,7 @@ object Deps {
             const val mvikotlinLogging = "com.arkivanov.mvikotlin:mvikotlin-logging:$VERSION"
             const val mvikotlinTimeTravel = "com.arkivanov.mvikotlin:mvikotlin-timetravel:$VERSION"
             const val mvikotlinExtensionsReaktive = "com.arkivanov.mvikotlin:mvikotlin-extensions-reaktive:$VERSION"
+            const val mvikotlinExtensionsCoroutines = "com.arkivanov.mvikotlin:mvikotlin-extensions-coroutines:$VERSION"
         }
 
         object Decompose {
@@ -78,6 +79,7 @@ object Deps {
             const val sqliteDriver = "com.squareup.sqldelight:sqlite-driver:$VERSION"
             const val nativeDriver = "com.squareup.sqldelight:native-driver:$VERSION"
             const val sqljsDriver = "com.squareup.sqldelight:sqljs-driver:$VERSION"
+            const val coroutines = "com.squareup.sqldelight:coroutines-extensions:$VERSION"
         }
     }
 }

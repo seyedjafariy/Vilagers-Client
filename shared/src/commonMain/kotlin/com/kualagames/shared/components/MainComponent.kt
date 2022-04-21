@@ -1,4 +1,4 @@
-package com.kualagames.shared.component
+package com.kualagames.shared.components
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.store.StoreFactory

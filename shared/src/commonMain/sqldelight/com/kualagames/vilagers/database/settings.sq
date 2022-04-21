@@ -1,0 +1,13 @@
+CREATE UNIQUE INDEX IF NOT EXISTS settings_key
+ON settings(key);
+
+
+getWithKey:
+SELECT * FROM settings
+WHERE key = :key;
+
+
+upsert:
+INSERT OR REPLACE INTO settings
+(key, value)
+VALUES(:key, :value);

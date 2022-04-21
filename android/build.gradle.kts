@@ -29,10 +29,6 @@ android {
 }
 
 dependencies {
-//    implementation(project(":common:database"))
-//    implementation(project(":common:utils"))
-//    implementation(project(":common:root"))
-//    implementation(project(":common:compose-ui"))
     implementation(project(":shared"))
     implementation(project(":composeui"))
     implementation(compose.material)
@@ -47,4 +43,6 @@ dependencies {
 
     implementation(Deps.AndroidX.AppCompat.appCompat)
     implementation(Deps.AndroidX.Activity.activityCompose)
+
+    implementation(Deps.Squareup.SQLDelight.androidDriver)
 }
