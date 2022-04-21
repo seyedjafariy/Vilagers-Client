@@ -9,3 +9,4 @@ dependencyResolutionManagement {
 rootProject.name = "Vilagers"
 include ':android'
 include ':shared'
+include ':composeui'

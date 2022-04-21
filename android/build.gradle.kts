@@ -34,13 +34,17 @@ dependencies {
 //    implementation(project(":common:root"))
 //    implementation(project(":common:compose-ui"))
     implementation(project(":shared"))
+    implementation(project(":composeui"))
     implementation(compose.material)
+
     implementation(Deps.ArkIvanov.MVIKotlin.mvikotlin)
     implementation(Deps.ArkIvanov.MVIKotlin.mvikotlinMain)
     implementation(Deps.ArkIvanov.MVIKotlin.mvikotlinLogging)
     implementation(Deps.ArkIvanov.MVIKotlin.mvikotlinTimeTravel)
+
     implementation(Deps.ArkIvanov.Decompose.decompose)
     implementation(Deps.ArkIvanov.Decompose.extensionsCompose)
+
     implementation(Deps.AndroidX.AppCompat.appCompat)
     implementation(Deps.AndroidX.Activity.activityCompose)
 }
