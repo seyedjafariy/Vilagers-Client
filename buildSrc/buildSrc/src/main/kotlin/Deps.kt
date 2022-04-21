@@ -38,11 +38,11 @@ object Deps {
 
     object AndroidX {
         object AppCompat {
-            const val appCompat = "androidx.appcompat:appcompat:1.3.0"
+            const val appCompat = "androidx.appcompat:appcompat:1.4.1"
         }
 
         object Activity {
-            const val activityCompose = "androidx.activity:activity-compose:1.3.0"
+            const val activityCompose = "androidx.activity:activity-compose:1.4.0"
         }
     }
 
@@ -58,7 +58,7 @@ object Deps {
         }
 
         object Decompose {
-            private const val VERSION = "0.5.1"
+            private const val VERSION = "0.6.0"
             const val decompose = "com.arkivanov.decompose:decompose:$VERSION"
             const val extensionsCompose = "com.arkivanov.decompose:extensions-compose-jetbrains:$VERSION"
         }
@@ -71,7 +71,7 @@ object Deps {
 
     object Squareup {
         object SQLDelight {
-            private const val VERSION = "1.5.0"
+            private const val VERSION = "1.5.3"
 
             const val gradlePlugin = "com.squareup.sqldelight:gradle-plugin:$VERSION"
             const val androidDriver = "com.squareup.sqldelight:android-driver:$VERSION"
