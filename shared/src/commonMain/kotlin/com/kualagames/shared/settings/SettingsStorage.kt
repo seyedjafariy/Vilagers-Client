@@ -4,6 +4,7 @@ import com.kualagames.vilagers.database.SettingsQueries
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToOneOrNull
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
@@ -22,6 +23,7 @@ class SettingsStorage(
 
     suspend fun get(key: String, context: CoroutineContext = Dispatchers.Default): String? =
         withContext(context) {
+            delay(3000)
             queries.getWithKey(key).executeAsOneOrNull()?.value_
         }
 

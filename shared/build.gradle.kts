@@ -22,6 +22,7 @@ kotlin {
                 implementation(Deps.ArkIvanov.MVIKotlin.rx)
                 implementation(Deps.JetBrains.Kotlin.coroutines)
                 implementation(Deps.Squareup.SQLDelight.coroutines)
+                implementation(Deps.Koin.koin)
             }
         }
     }

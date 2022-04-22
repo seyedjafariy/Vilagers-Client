@@ -5,8 +5,12 @@ import com.arkivanov.decompose.value.Value
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.rx.Observer
+import com.kualagames.shared.components.DIComponent
 import com.kualagames.shared.settings.SettingsStorage
 import com.kualagames.shared.utils.asValue
+import org.koin.core.component.get
+import org.koin.core.component.inject
+import org.koin.core.scope.Scope
 
 interface SplashComponent {
     sealed interface State {
@@ -23,16 +27,12 @@ interface SplashComponent {
 
 class SplashComponentImpl(
     componentContext: ComponentContext,
-    storeFactory: StoreFactory,
-    settingsStorage: SettingsStorage,
+    parentScope : Scope,
     private val openNext : (SplashComponent.Output) -> Unit
-) : SplashComponent, ComponentContext by componentContext{
+) : DIComponent(componentContext, parentScope, listOf(splashModule)), SplashComponent{
 
-    private val store = instanceKeeper.getStore {
-        SplashStoreProvider(
-            storeFactory = storeFactory,
-            settingsStorage
-        ).provide()
+    private val store : SplashStore = instanceKeeper.getStore {
+        get<SplashStore>()
     }.apply {
         labels(object : Observer<SplashComponent.State>{
             override fun onComplete() {}

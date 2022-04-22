@@ -10,6 +10,7 @@ kotlin {
                 implementation(project(":shared"))
                 implementation(Deps.ArkIvanov.Decompose.decompose)
                 implementation(Deps.ArkIvanov.Decompose.extensionsCompose)
+                implementation(Deps.Koin.compose)
             }
         }
     }

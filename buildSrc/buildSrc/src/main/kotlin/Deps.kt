@@ -82,4 +82,12 @@ object Deps {
             const val coroutines = "com.squareup.sqldelight:coroutines-extensions:$VERSION"
         }
     }
+
+    object Koin {
+        private const val VERSION = "3.2.0-beta-1"
+        const val koin = "io.insert-koin:koin-core:$VERSION"
+        const val test = "io.insert-koin:koin-test:$VERSION"
+        const val android = "io.insert-koin:koin-android:$VERSION"
+        const val compose = "io.insert-koin:koin-androidx-compose:$VERSION"
+    }
 }

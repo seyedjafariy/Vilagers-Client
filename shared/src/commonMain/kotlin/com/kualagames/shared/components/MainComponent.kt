@@ -7,5 +7,4 @@ interface MainComponent
 
 class MainComponentImpl(
     componentContext: ComponentContext,
-    storeFactory: StoreFactory,
 ) : MainComponent, ComponentContext by componentContext

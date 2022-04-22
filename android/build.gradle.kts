@@ -45,4 +45,7 @@ dependencies {
     implementation(Deps.AndroidX.Activity.activityCompose)
 
     implementation(Deps.Squareup.SQLDelight.androidDriver)
+
+    implementation(Deps.Koin.android)
+    implementation(Deps.Koin.compose)
 }

@@ -1,17 +1,26 @@
-package com.kualagames.shared.components
+package com.kualagames.shared.components.root
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.RouterState
 import com.arkivanov.decompose.router.navigate
-import com.arkivanov.decompose.router.push
 import com.arkivanov.decompose.router.router
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.lifecycle.doOnDestroy
 import com.arkivanov.essenty.parcelable.Parcelable
 import com.arkivanov.essenty.parcelable.Parcelize
 import com.arkivanov.mvikotlin.core.store.StoreFactory
+import com.kualagames.shared.components.DIComponent
+import com.kualagames.shared.components.MainComponent
+import com.kualagames.shared.components.MainComponentImpl
+import com.kualagames.shared.components.auth.AuthComponent
+import com.kualagames.shared.components.auth.AuthComponentImpl
 import com.kualagames.shared.components.splash.SplashComponent
 import com.kualagames.shared.components.splash.SplashComponentImpl
 import com.kualagames.shared.settings.SettingsStorage
+import org.koin.core.component.KoinScopeComponent
+import org.koin.core.component.createScope
+import org.koin.core.context.loadKoinModules
+import org.koin.core.scope.Scope
 
 interface RootComponent {
     val routerState: Value<RouterState<*, Child>>
@@ -25,9 +34,8 @@ interface RootComponent {
 
 class RootComponentImpl(
     componentContext: ComponentContext,
-    private val storeFactory: StoreFactory,
-    private val settingsStorage: SettingsStorage,
-) : RootComponent, ComponentContext by componentContext {
+    parentScope: Scope,
+) : DIComponent(componentContext, parentScope), RootComponent {
 
     private val router = router<Config, RootComponent.Child>(
         initialConfiguration = Config.Splash,
@@ -45,20 +53,17 @@ class RootComponentImpl(
             is Config.Main -> RootComponent.Child.Main(
                 MainComponentImpl(
                     componentContext,
-                    storeFactory
                 )
             )
             is Config.Auth -> RootComponent.Child.Auth(
                 AuthComponentImpl(
                     componentContext,
-                    storeFactory
                 )
             )
             is Config.Splash -> RootComponent.Child.Splash(
                 SplashComponentImpl(
                     componentContext,
-                    storeFactory,
-                    settingsStorage,
+                    scope,
                     ::onSplashOutput,
                 )
             )

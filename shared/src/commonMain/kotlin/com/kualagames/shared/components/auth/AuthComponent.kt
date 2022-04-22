@@ -1,4 +1,4 @@
-package com.kualagames.shared.components
+package com.kualagames.shared.components.auth
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.router
@@ -16,7 +16,6 @@ interface AuthComponent {
 
 class AuthComponentImpl(
     componentContext: ComponentContext,
-    storeFactory: StoreFactory,
 ) : AuthComponent, ComponentContext by componentContext {
 
     private val router = router(

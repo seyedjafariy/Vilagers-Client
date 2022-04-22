@@ -7,7 +7,7 @@ import com.arkivanov.decompose.extensions.compose.jetbrains.animation.child.fade
 import com.kualagames.compose.ui.auth.AuthScreen
 import com.kualagames.compose.ui.main.MainScreen
 import com.kualagames.compose.ui.splash.SplashScreen
-import com.kualagames.shared.components.RootComponent
+import com.kualagames.shared.components.root.RootComponent
 
 @Composable
 fun RootScreen(component: RootComponent) {
