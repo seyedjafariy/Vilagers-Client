@@ -20,6 +20,9 @@ object Deps {
             val testAnnotationsCommon get() = "org.jetbrains.kotlin:kotlin-test-annotations-common:$VERSION"
 
             val coroutines get() = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0"
+
+            val serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2"
+            val serializationPlugin = "org.jetbrains.kotlin:kotlin-serialization:$VERSION"
         }
 
         object Compose {
@@ -54,14 +57,17 @@ object Deps {
             const val mvikotlinMain = "com.arkivanov.mvikotlin:mvikotlin-main:$VERSION"
             const val mvikotlinLogging = "com.arkivanov.mvikotlin:mvikotlin-logging:$VERSION"
             const val mvikotlinTimeTravel = "com.arkivanov.mvikotlin:mvikotlin-timetravel:$VERSION"
-            const val mvikotlinExtensionsReaktive = "com.arkivanov.mvikotlin:mvikotlin-extensions-reaktive:$VERSION"
-            const val mvikotlinExtensionsCoroutines = "com.arkivanov.mvikotlin:mvikotlin-extensions-coroutines:$VERSION"
+            const val mvikotlinExtensionsReaktive =
+                "com.arkivanov.mvikotlin:mvikotlin-extensions-reaktive:$VERSION"
+            const val mvikotlinExtensionsCoroutines =
+                "com.arkivanov.mvikotlin:mvikotlin-extensions-coroutines:$VERSION"
         }
 
         object Decompose {
             private const val VERSION = "0.6.0"
             const val decompose = "com.arkivanov.decompose:decompose:$VERSION"
-            const val extensionsCompose = "com.arkivanov.decompose:extensions-compose-jetbrains:$VERSION"
+            const val extensionsCompose =
+                "com.arkivanov.decompose:extensions-compose-jetbrains:$VERSION"
         }
 
         object Essenty {
@@ -81,6 +87,9 @@ object Deps {
             const val sqljsDriver = "com.squareup.sqldelight:sqljs-driver:$VERSION"
             const val coroutines = "com.squareup.sqldelight:coroutines-extensions:$VERSION"
         }
+
+        val okhttp = "com.squareup.okhttp3:okhttp:4.9.3"
+        val loggingInterceptor = "com.squareup.okhttp3:logging-interceptor:4.9.3"
     }
 
     object Koin {
@@ -89,5 +98,36 @@ object Deps {
         const val test = "io.insert-koin:koin-test:$VERSION"
         const val android = "io.insert-koin:koin-android:$VERSION"
         const val compose = "io.insert-koin:koin-androidx-compose:$VERSION"
+    }
+
+    object Ktor {
+        private const val VERSION = "1.6.8"
+
+        val common = "io.ktor:ktor-client-core:${VERSION}"
+        val jvm = "io.ktor:ktor-client-core-jvm:${VERSION}"
+
+        val okHttp = "io.ktor:ktor-client-okhttp:${VERSION}"
+        val ios = "io.ktor:ktor-client-ios:${VERSION}"
+        val native = "io.ktor:ktor-client-core-native:${VERSION}"
+
+        object Json {
+            val common = "io.ktor:ktor-client-json:${VERSION}"
+            val jvm = "io.ktor:ktor-client-json-jvm:${VERSION}"
+            val ios = "io.ktor:ktor-client-json-native:${VERSION}"
+            val js = "io.ktor:ktor-client-json-js:${VERSION}"
+        }
+
+        object Serialization {
+            val common = "io.ktor:ktor-client-serialization:${VERSION}"
+            val jvm = "io.ktor:ktor-client-serialization-jvm:${VERSION}"
+            val native = "io.ktor:ktor-client-serialization-native:${VERSION}"
+        }
+
+        object Logger {
+            val common = "io.ktor:ktor-client-logging:${VERSION}"
+            val jvm = "io.ktor:ktor-client-logging-jvm:${VERSION}"
+            val native = "io.ktor:ktor-client-logging-native:${VERSION}"
+            val js = "io.ktor:ktor-client-logging-js:${VERSION}"
+        }
     }
 }

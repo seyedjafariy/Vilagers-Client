@@ -7,6 +7,7 @@ import org.koin.android.ext.koin.androidLogger
 import org.koin.core.annotation.KoinInternalApi
 import org.koin.core.context.GlobalContext.startKoin
 import org.koin.core.scope.Scope
+import com.kualagames.shared.utils.mergedModules
 
 class App : Application() {
 
@@ -21,7 +22,7 @@ class App : Application() {
         scope = startKoin{
             androidLogger()
             androidContext(this@App)
-            modules(databaseModule, storesModule)
+            modules(listOf(dbDriverModule, storesModule, networkEngineModule) + mergedModules)
         }.koin.scopeRegistry.rootScope
     }
 }

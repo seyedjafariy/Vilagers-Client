@@ -58,6 +58,7 @@ class RootComponentImpl(
             is Config.Auth -> RootComponent.Child.Auth(
                 AuthComponentImpl(
                     componentContext,
+                    scope,
                 )
             )
             is Config.Splash -> RootComponent.Child.Splash(

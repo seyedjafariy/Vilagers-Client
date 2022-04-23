@@ -23,6 +23,11 @@ kotlin {
                 implementation(Deps.JetBrains.Kotlin.coroutines)
                 implementation(Deps.Squareup.SQLDelight.coroutines)
                 implementation(Deps.Koin.koin)
+
+                implementation(Deps.Ktor.common)
+                implementation(Deps.Ktor.Json.common)
+                implementation(Deps.Ktor.Serialization.common)
+                implementation(Deps.JetBrains.Kotlin.serialization)
             }
         }
     }

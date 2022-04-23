@@ -1,6 +1,7 @@
 plugins {
     id("com.android.library")
     id("kotlin-multiplatform")
+    kotlin("plugin.serialization")
 }
 
 initDeps(project)

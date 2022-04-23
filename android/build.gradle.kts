@@ -45,7 +45,12 @@ dependencies {
     implementation(Deps.AndroidX.Activity.activityCompose)
 
     implementation(Deps.Squareup.SQLDelight.androidDriver)
+    implementation(Deps.Squareup.okhttp)
+    implementation(Deps.Squareup.loggingInterceptor)
 
     implementation(Deps.Koin.android)
     implementation(Deps.Koin.compose)
+
+    implementation(Deps.Ktor.okHttp)
+    implementation(Deps.Ktor.common)
 }

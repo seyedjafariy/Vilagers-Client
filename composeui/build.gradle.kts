@@ -11,6 +11,7 @@ kotlin {
                 implementation(Deps.ArkIvanov.Decompose.decompose)
                 implementation(Deps.ArkIvanov.Decompose.extensionsCompose)
                 implementation(Deps.Koin.compose)
+                implementation(Deps.Koin.koin)
             }
         }
     }
