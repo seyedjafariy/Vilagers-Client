@@ -1,4 +1,4 @@
-package com.kualagames.shared.settings
+package com.kualagames.shared.storages
 
 import com.kualagames.vilagers.database.SettingsQueries
 import com.squareup.sqldelight.runtime.coroutines.asFlow

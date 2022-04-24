@@ -25,6 +25,7 @@ interface AuthComponent {
 class AuthComponentImpl(
     componentContext: ComponentContext,
     parentScope: Scope,
+    private val authSuccess : () -> Unit,
 ) : DIComponent(componentContext, parentScope, listOf(authModule)), AuthComponent {
 
     private val router = router(
@@ -41,8 +42,10 @@ class AuthComponentImpl(
         componentContext: ComponentContext
     ): AuthComponent.Child =
         when (config) {
-            is Config.Login -> AuthComponent.Child.Login(LoginComponentImpl(componentContext, scope) {
+            is Config.Login -> AuthComponent.Child.Login(LoginComponentImpl(componentContext, scope, openRegister = {
                 router.push(Config.Register)
+            }) {
+                authSuccess()
             })
             is Config.Register -> AuthComponent.Child.Register
         }

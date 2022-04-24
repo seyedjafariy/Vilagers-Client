@@ -30,6 +30,15 @@ internal val networkModule = module {
 //        logger = Logger.DEFAULT
 //        level = LogLevel.ALL
 //    }
+
+            install(TokenInterceptor) {
+                this.credentialStorage = get()
+                this.requestsWithoutAuthorization = setOf("api/auth/login")
+            }
+
+            install(APIKeyInterceptor){
+            }
+
             defaultRequest {
                 url {
                     protocol = URLProtocol.HTTPS
@@ -39,3 +48,5 @@ internal val networkModule = module {
         }
     }
 }
+
+private const val BASE_URL = "vilagers.com"

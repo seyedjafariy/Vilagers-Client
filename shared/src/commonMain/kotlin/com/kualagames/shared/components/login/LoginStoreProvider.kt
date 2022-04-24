@@ -6,20 +6,26 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.kualagames.shared.components.auth.AuthAPI
+import com.kualagames.shared.storages.CredentialStorage
+import com.kualagames.shared.components.auth.toCredentials
+import com.kualagames.shared.components.auth.toProfile
 import com.kualagames.shared.components.login.LoginComponent.State
 import com.kualagames.shared.components.login.LoginStore.Intent
-import com.kualagames.shared.network.successData
-import kotlinx.coroutines.Dispatchers
+import com.kualagames.shared.components.login.LoginStore.Label
+import com.kualagames.shared.components.profile.ProfileRepository
+import com.kualagames.shared.network.successBody
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class LoginStoreProvider(
     private val storeFactory: StoreFactory,
     private val api: AuthAPI,
+    private val credentialStorage: CredentialStorage,
+    private val profileRepository: ProfileRepository,
 ) {
 
     fun provide(): LoginStore =
-        object : LoginStore, Store<Intent, State, Nothing> by storeFactory.create(
+        object : LoginStore, Store<Intent, State, Label> by storeFactory.create(
             name = "LoginStore",
             initialState = State(),
             bootstrapper = SimpleBootstrapper(),
@@ -28,13 +34,18 @@ class LoginStoreProvider(
         ) {}
 
     private sealed interface Message {
-        data class Loaded(
-            val echo: String
-        ) : Message
+        object Loading : Message
+        object StopLoading : Message
+
+        object ClearErrors : Message
+
+        object LoginFailed : Message
+        object WrongPassword : Message
+        object WrongUsername : Message
     }
 
     // Logic should take place in the executor
-    private inner class ExecutorImpl : CoroutineExecutor<Intent, Nothing, State, Message, Nothing>() {
+    private inner class ExecutorImpl : CoroutineExecutor<Intent, Nothing, State, Message, Label>() {
 
         override fun executeIntent(intent: Intent, getState: () -> State) {
             when (intent) {
@@ -44,13 +55,37 @@ class LoginStoreProvider(
 
         private fun login(intent: Intent.Login) {
             scope.launch {
-                val response = withContext(Dispatchers.Default){
-                    api.echo()
+                if (intent.username.isBlank()) {
+                    dispatch(Message.WrongUsername)
+                    delay(3000)
+                    dispatch(Message.ClearErrors)
+                    return@launch
+                }
+                if (intent.password.isBlank()) {
+                    dispatch(Message.WrongPassword)
+                    delay(3000)
+                    dispatch(Message.ClearErrors)
+                    return@launch
                 }
 
-                val echoData = response.successData().toList().joinToString(separator = "\n")
+                dispatch(Message.Loading)
 
-                dispatch(Message.Loaded(echoData))
+                val response = api.login(intent.username, intent.password)
+
+                if (response.isSuccessful) {
+                    val body = response.successBody
+
+                    credentialStorage.store(body.toCredentials())
+                    profileRepository.store(body.toProfile())
+
+                    publish(Label.Success)
+                } else {
+
+                    dispatch(Message.StopLoading)
+                    dispatch(Message.LoginFailed)
+                    delay(3000)
+                    dispatch(Message.ClearErrors)
+                }
             }
         }
     }
@@ -59,8 +94,12 @@ class LoginStoreProvider(
     private object ReducerImpl : Reducer<State, Message> {
         override fun State.reduce(msg: Message): State =
             when (msg) {
-                is Message.Loaded -> copy(loading = false, echoData = msg.echo)
+                is Message.Loading -> copy(loading = true)
+                Message.StopLoading -> copy(loading = false)
+                Message.ClearErrors -> copy(showLoginFailed = false, showWrongPass = false, showWrongUsername = false)
+                Message.LoginFailed -> copy(showLoginFailed = true)
+                Message.WrongPassword -> copy(showWrongPass = true)
+                Message.WrongUsername -> copy(showWrongUsername = true)
             }
     }
-
 }

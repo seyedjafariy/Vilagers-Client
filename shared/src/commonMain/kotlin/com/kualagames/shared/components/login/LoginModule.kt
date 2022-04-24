@@ -4,7 +4,7 @@ import org.koin.dsl.module
 
 val loginModule = module {
     factory {
-        LoginStoreProvider(get(), get()).provide()
+        LoginStoreProvider(get(), get(), get(), get()).provide()
     }
 
 }

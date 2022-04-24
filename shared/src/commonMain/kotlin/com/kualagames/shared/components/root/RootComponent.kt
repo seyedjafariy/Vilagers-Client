@@ -5,10 +5,8 @@ import com.arkivanov.decompose.router.RouterState
 import com.arkivanov.decompose.router.navigate
 import com.arkivanov.decompose.router.router
 import com.arkivanov.decompose.value.Value
-import com.arkivanov.essenty.lifecycle.doOnDestroy
 import com.arkivanov.essenty.parcelable.Parcelable
 import com.arkivanov.essenty.parcelable.Parcelize
-import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.kualagames.shared.components.DIComponent
 import com.kualagames.shared.components.MainComponent
 import com.kualagames.shared.components.MainComponentImpl
@@ -16,10 +14,6 @@ import com.kualagames.shared.components.auth.AuthComponent
 import com.kualagames.shared.components.auth.AuthComponentImpl
 import com.kualagames.shared.components.splash.SplashComponent
 import com.kualagames.shared.components.splash.SplashComponentImpl
-import com.kualagames.shared.settings.SettingsStorage
-import org.koin.core.component.KoinScopeComponent
-import org.koin.core.component.createScope
-import org.koin.core.context.loadKoinModules
 import org.koin.core.scope.Scope
 
 interface RootComponent {
@@ -59,7 +53,9 @@ class RootComponentImpl(
                 AuthComponentImpl(
                     componentContext,
                     scope,
-                )
+                ) {
+                    router.navigate { listOf(Config.Main) }
+                }
             )
             is Config.Splash -> RootComponent.Child.Splash(
                 SplashComponentImpl(

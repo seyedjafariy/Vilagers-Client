@@ -4,6 +4,7 @@ import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.ValueObserver
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.rx.Disposable
+import com.arkivanov.mvikotlin.rx.Observer
 
 fun <T : Any> Store<*, T, *>.asValue(): Value<T> =
     object : Value<T>() {
@@ -21,3 +22,12 @@ fun <T : Any> Store<*, T, *>.asValue(): Value<T> =
             disposable.dispose()
         }
     }
+
+fun <T : Any> Store<*, *, T>.onNextLabel(block: (T) -> Unit): Disposable = labels(OnNextObserver {
+    block(it)
+})
+
+
+fun interface OnNextObserver<T> : Observer<T> {
+    override fun onComplete() {}
+}

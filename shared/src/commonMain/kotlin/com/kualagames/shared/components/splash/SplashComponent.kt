@@ -1,15 +1,13 @@
 package com.kualagames.shared.components.splash
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.value.Value
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
-import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.rx.Observer
 import com.kualagames.shared.components.DIComponent
-import com.kualagames.shared.settings.SettingsStorage
-import com.kualagames.shared.utils.asValue
+import com.kualagames.shared.utils.addTo
+import com.kualagames.shared.utils.createdCompositeDisposable
+import com.kualagames.shared.utils.onNextLabel
 import org.koin.core.component.get
-import org.koin.core.component.inject
 import org.koin.core.scope.Scope
 
 interface SplashComponent {
@@ -34,17 +32,13 @@ class SplashComponentImpl(
     private val store : SplashStore = instanceKeeper.getStore {
         get<SplashStore>()
     }.apply {
-        labels(object : Observer<SplashComponent.State>{
-            override fun onComplete() {}
-
-            override fun onNext(value: SplashComponent.State) {
-                val output = when (value) {
-                    SplashComponent.State.Loading -> error("wrong label")
-                    SplashComponent.State.Auth -> SplashComponent.Output.Auth
-                    SplashComponent.State.Main -> SplashComponent.Output.Main
-                }
-                openNext(output)
+        onNextLabel {
+            val output = when (it) {
+                SplashComponent.State.Loading -> error("wrong label")
+                SplashComponent.State.Auth -> SplashComponent.Output.Auth
+                SplashComponent.State.Main -> SplashComponent.Output.Main
             }
-        })
+            openNext(output)
+        } addTo createdCompositeDisposable
     }
 }

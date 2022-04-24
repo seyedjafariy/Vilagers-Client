@@ -4,10 +4,19 @@ package com.kualagames.shared.network
 sealed class Response<T>(
     val statusCode: Int
 ) {
-    data class Success<K>(
-        val status: Int,
-        val data: K
-    ) : Response<K>(status)
+    sealed class Success<K>(
+        status: Int,
+    ) : Response<K>(status) {
+
+        data class WithBody<K>(
+            val status: Int,
+            val body: K
+        ) : Success<K>(status)
+
+        data class EmptyBody(
+            val status: Int,
+        ) : Success<Unit>(status)
+    }
 
     data class Error(
         val status: Int,
@@ -20,23 +29,23 @@ sealed class Response<T>(
 
     val isNotSuccessful: Boolean
         get() = !isSuccessful
+
+    val success: Success<T>
+        get() = this as Success<T>
+
+    val error: Error
+        get() = this as Error
 }
 
-fun <T> Response<T>.orNull(whenNull: (Response.Error) -> T): T {
+
+val <T> Response<T>.successBody: T
+    get() = (this as Response.Success.WithBody<T>).body
+
+fun <T> Response<T>.bodyOrNull(whenNull: (Response.Error) -> T): T {
     return if (isSuccessful) {
-        (this as Response.Success<T>).data
+        successBody
     } else {
         whenNull((this as Response.Error))
-    }
-}
-
-fun <T> Response<T>.successData() : T {
-    val success = this as? Response.Success<T>
-
-    return if (success != null) {
-        success.data
-    }else{
-        error("failed response= $this")
     }
 }
 

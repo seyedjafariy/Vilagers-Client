@@ -3,8 +3,9 @@ package com.kualagames.shared.components.login
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
+import com.arkivanov.mvikotlin.rx.Observer
 import com.kualagames.shared.components.DIComponent
-import com.kualagames.shared.utils.asValue
+import com.kualagames.shared.utils.*
 import org.koin.core.component.get
 import org.koin.core.scope.Scope
 
@@ -13,22 +14,33 @@ interface LoginComponent {
     val states: Value<State>
 
     fun onRegisterClicked()
-    fun onLoginClicked()
+    fun onLoginClicked(username: String, password: String)
 
     data class State(
-        val loading : Boolean = true,
-        val echoData : String = "",
+        val loading: Boolean = false,
+        val showLoginFailed : Boolean = false,
+        val showWrongPass : Boolean = false,
+        val showWrongUsername : Boolean = false,
     )
 }
 
 class LoginComponentImpl(
     componentContext: ComponentContext,
     parentScope: Scope,
-    private val openRegister : () -> Unit
+    private val openRegister: () -> Unit,
+    private val loginSuccessful: () -> Unit,
 ) : DIComponent(componentContext, parentScope, listOf(loginModule)), LoginComponent {
 
-    private val store : LoginStore = instanceKeeper.getStore {
-        get()
+    private val store: LoginStore = instanceKeeper.getStore {
+        get<LoginStore>()
+    }.apply {
+        onNextLabel {
+            when (it) {
+                LoginStore.Label.Success -> {
+                    loginSuccessful()
+                }
+            }
+        }.addTo(createdCompositeDisposable)
     }
 
     override val states: Value<LoginComponent.State> = store.asValue()
@@ -36,7 +48,7 @@ class LoginComponentImpl(
         openRegister()
     }
 
-    override fun onLoginClicked() {
-        store.accept(LoginStore.Intent.Login)
+    override fun onLoginClicked(username: String, password: String) {
+        store.accept(LoginStore.Intent.Login(username, password))
     }
 }
