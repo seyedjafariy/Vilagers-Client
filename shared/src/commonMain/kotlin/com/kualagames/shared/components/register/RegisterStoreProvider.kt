@@ -1,4 +1,4 @@
-package com.kualagames.shared.components.login
+package com.kualagames.shared.components.register
 
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
@@ -9,23 +9,23 @@ import com.kualagames.shared.components.auth.AuthAPI
 import com.kualagames.shared.storages.UserInfoRepository
 import com.kualagames.shared.components.auth.toCredentials
 import com.kualagames.shared.components.auth.toProfile
-import com.kualagames.shared.components.login.LoginComponent.State
-import com.kualagames.shared.components.login.LoginStore.Intent
-import com.kualagames.shared.components.login.LoginStore.Label
+import com.kualagames.shared.components.register.RegisterComponent.State
+import com.kualagames.shared.components.register.RegisterStore.Intent
+import com.kualagames.shared.components.register.RegisterStore.Label
 import com.kualagames.shared.components.profile.ProfileRepository
 import com.kualagames.shared.network.successBody
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class LoginStoreProvider(
+class RegisterStoreProvider(
     private val storeFactory: StoreFactory,
     private val api: AuthAPI,
     private val userInfoRepository: UserInfoRepository,
     private val profileRepository: ProfileRepository,
 ) {
 
-    fun provide(): LoginStore =
-        object : LoginStore, Store<Intent, State, Label> by storeFactory.create(
+    fun provide(): RegisterStore =
+        object : RegisterStore, Store<Intent, State, Label> by storeFactory.create(
             name = "LoginStore",
             initialState = State(),
             bootstrapper = SimpleBootstrapper(),
@@ -39,9 +39,14 @@ class LoginStoreProvider(
 
         object ClearErrors : Message
 
-        object LoginFailed : Message
-        object WrongPassword : Message
-        object WrongUsername : Message
+        object RegisterFailed : Message
+
+        object BadPassword : Message
+        object BadUsername : Message
+        object BadEmail : Message
+
+        object DuplicateEmail : Message
+        object DuplicateUsername : Message
     }
 
     // Logic should take place in the executor
@@ -49,20 +54,26 @@ class LoginStoreProvider(
 
         override fun executeIntent(intent: Intent, getState: () -> State) {
             when (intent) {
-                is Intent.Login -> login(intent)
+                is Intent.Register -> register(intent)
             }
         }
 
-        private fun login(intent: Intent.Login) {
+        private fun register(intent: Intent.Register) {
             scope.launch {
                 if (intent.username.isBlank()) {
-                    dispatch(Message.WrongUsername)
+                    dispatch(Message.BadUsername)
                     delay(3000)
                     dispatch(Message.ClearErrors)
                     return@launch
                 }
                 if (intent.password.isBlank()) {
-                    dispatch(Message.WrongPassword)
+                    dispatch(Message.BadPassword)
+                    delay(3000)
+                    dispatch(Message.ClearErrors)
+                    return@launch
+                }
+                if (intent.email.isBlank()) {
+                    dispatch(Message.BadEmail)
                     delay(3000)
                     dispatch(Message.ClearErrors)
                     return@launch
@@ -70,7 +81,11 @@ class LoginStoreProvider(
 
                 dispatch(Message.Loading)
 
-                val response = api.login(intent.username, intent.password)
+                val response = api.register(
+                    email = intent.email,
+                    username = intent.username,
+                    password = intent.password
+                )
 
                 if (response.isSuccessful) {
                     val body = response.successBody
@@ -82,7 +97,7 @@ class LoginStoreProvider(
                 } else {
 
                     dispatch(Message.StopLoading)
-                    dispatch(Message.LoginFailed)
+                    dispatch(Message.RegisterFailed)
                     delay(3000)
                     dispatch(Message.ClearErrors)
                 }
@@ -96,10 +111,23 @@ class LoginStoreProvider(
             when (msg) {
                 is Message.Loading -> copy(loading = true)
                 Message.StopLoading -> copy(loading = false)
-                Message.ClearErrors -> copy(showLoginFailed = false, showWrongPass = false, showWrongUsername = false)
-                Message.LoginFailed -> copy(showLoginFailed = true)
-                Message.WrongPassword -> copy(showWrongPass = true)
-                Message.WrongUsername -> copy(showWrongUsername = true)
+                Message.ClearErrors -> copy(
+                    showRegisterFailed = false,
+                    showEmailError = false,
+                    showUsernameError = false,
+                    showPasswordError = false,
+                    emailErrorReason = State.ErrorReason.No,
+                    usernameErrorReason = State.ErrorReason.No,
+                )
+
+                Message.RegisterFailed -> copy(showRegisterFailed = true)
+
+                Message.BadPassword -> copy(showPasswordError = true)
+                Message.BadUsername -> copy(showUsernameError = true, usernameErrorReason = State.ErrorReason.Bad)
+                Message.BadEmail -> copy(showEmailError = true, emailErrorReason = State.ErrorReason.Bad)
+
+                Message.DuplicateEmail -> copy(showEmailError = true, emailErrorReason = State.ErrorReason.Duplicate)
+                Message.DuplicateUsername -> copy(showUsernameError = true, usernameErrorReason = State.ErrorReason.Duplicate)
             }
     }
 }

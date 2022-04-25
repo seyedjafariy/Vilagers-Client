@@ -32,7 +32,7 @@ internal val networkModule = module {
 //    }
 
             install(TokenInterceptor) {
-                this.credentialStorage = get()
+                this.userInfoRepository = get()
                 this.requestsWithoutAuthorization = setOf("api/auth/login")
             }
 

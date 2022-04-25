@@ -4,17 +4,16 @@ import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.kualagames.shared.components.auth.AuthConst
 import com.kualagames.shared.components.splash.SplashComponent.State
-import com.kualagames.shared.storages.CredentialStorage
-import com.kualagames.shared.storages.userExists
+import com.kualagames.shared.storages.UserInfoRepository
+import com.kualagames.shared.storages.userLoaded
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class SplashStoreProvider(
     private val storeFactory: StoreFactory,
-    private val credentialStorage: CredentialStorage,
+    private val userInfoRepository: UserInfoRepository,
 ) {
 
     fun provide(): SplashStore =
@@ -44,7 +43,8 @@ class SplashStoreProvider(
         private fun fetchUserState() {
             scope.launch {
                 val userExists = withContext(Dispatchers.Default) {
-                    credentialStorage.userExists
+                    userInfoRepository.loadFromStorage()
+                    userInfoRepository.userLoaded
                 }
 
                 if (userExists) {

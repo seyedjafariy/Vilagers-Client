@@ -28,6 +28,7 @@ kotlin {
                 implementation(Deps.Ktor.Json.common)
                 implementation(Deps.Ktor.Serialization.common)
                 implementation(Deps.JetBrains.Kotlin.serialization)
+                implementation(Deps.JetBrains.Kotlin.datetime)
             }
         }
     }

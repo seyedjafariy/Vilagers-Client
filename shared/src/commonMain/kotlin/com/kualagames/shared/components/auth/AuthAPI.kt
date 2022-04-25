@@ -30,4 +30,16 @@ class AuthAPI(
             )
         }
     }
+
+    suspend fun register(email : String, username : String, password : String) : Response<AuthDTO> = client.executeRequest {
+        method = HttpMethod.Post
+        url {
+            encodedPath = "api/auth/register"
+            addFormData(
+                "user_name" to username,
+                "password" to password,
+                "email" to email,
+            )
+        }
+    }
 }

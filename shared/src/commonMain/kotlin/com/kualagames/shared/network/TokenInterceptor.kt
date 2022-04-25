@@ -1,13 +1,13 @@
 package com.kualagames.shared.network;
 
-import com.kualagames.shared.storages.CredentialStorage
+import com.kualagames.shared.storages.UserInfoRepository
 import io.ktor.client.*
 import io.ktor.client.features.*
 import io.ktor.client.request.*
 import io.ktor.util.*
 
 class TokenInterceptor(
-    private val credentialStorage: CredentialStorage,
+    private val userInfoRepository: UserInfoRepository,
     private val requestsWithoutAuthorization: Set<String>
 ) {
 
@@ -34,7 +34,7 @@ class TokenInterceptor(
 
     private suspend fun processRequest(client: HttpClient, context: HttpRequestBuilder) {
         val url = context.url.encodedPath
-        val user = credentialStorage.getUserOrNull()
+        val user = userInfoRepository.getCredentialsOrNull()
         if (requestsWithoutAuthorization.contains(url) || user == null) {
             return
         } else {
@@ -50,7 +50,7 @@ class TokenInterceptor(
     }
 
     class Config {
-        lateinit var credentialStorage: CredentialStorage
+        lateinit var userInfoRepository: UserInfoRepository
         lateinit var requestsWithoutAuthorization: Set<String>
     }
 
@@ -61,7 +61,7 @@ class TokenInterceptor(
         override fun prepare(block: Config.() -> Unit): TokenInterceptor {
             val config = Config().apply(block)
             return TokenInterceptor(
-                config.credentialStorage,
+                config.userInfoRepository,
                 config.requestsWithoutAuthorization
             )
         }

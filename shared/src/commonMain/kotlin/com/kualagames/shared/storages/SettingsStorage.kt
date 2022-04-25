@@ -23,7 +23,6 @@ class SettingsStorage(
 
     suspend fun get(key: String, context: CoroutineContext = Dispatchers.Default): String? =
         withContext(context) {
-            delay(3000)
             queries.getWithKey(key).executeAsOneOrNull()?.value_
         }
 

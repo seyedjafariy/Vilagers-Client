@@ -3,7 +3,6 @@ package com.kualagames.shared.components.login
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
-import com.arkivanov.mvikotlin.rx.Observer
 import com.kualagames.shared.components.DIComponent
 import com.kualagames.shared.utils.*
 import org.koin.core.component.get
@@ -15,6 +14,7 @@ interface LoginComponent {
 
     fun onRegisterClicked()
     fun onLoginClicked(username: String, password: String)
+    fun forgotPasswordClicked()
 
     data class State(
         val loading: Boolean = false,
@@ -40,7 +40,7 @@ class LoginComponentImpl(
                     loginSuccessful()
                 }
             }
-        }.addTo(createdCompositeDisposable)
+        }.addTo(createdDisposables)
     }
 
     override val states: Value<LoginComponent.State> = store.asValue()
@@ -50,5 +50,9 @@ class LoginComponentImpl(
 
     override fun onLoginClicked(username: String, password: String) {
         store.accept(LoginStore.Intent.Login(username, password))
+    }
+
+    override fun forgotPasswordClicked() {
+        TODO("Not yet implemented")
     }
 }

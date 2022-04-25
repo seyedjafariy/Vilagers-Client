@@ -9,7 +9,7 @@ infix fun Disposable.addTo(disposables: MutableSet<Disposable>) {
     disposables.add(this)
 }
 
-val ComponentContext.createdCompositeDisposable: MutableSet<Disposable>
+val ComponentContext.createdDisposables: MutableSet<Disposable>
     get() = instanceKeeper.getOrCreate(KEY_CREATED_DISPOSABLE) {
         DisposableInstance(mutableSetOf())
     }.disposables

@@ -10,6 +10,8 @@ import com.arkivanov.essenty.parcelable.Parcelize
 import com.kualagames.shared.components.DIComponent
 import com.kualagames.shared.components.login.LoginComponent
 import com.kualagames.shared.components.login.LoginComponentImpl
+import com.kualagames.shared.components.register.RegisterComponent
+import com.kualagames.shared.components.register.RegisterComponentImpl
 import org.koin.core.scope.Scope
 
 interface AuthComponent {
@@ -18,14 +20,14 @@ interface AuthComponent {
 
     sealed interface Child {
         class Login(val component: LoginComponent) : Child
-        object Register : Child
+        class Register(val component: RegisterComponent) : Child
     }
 }
 
 class AuthComponentImpl(
     componentContext: ComponentContext,
     parentScope: Scope,
-    private val authSuccess : () -> Unit,
+    private val authSuccess: () -> Unit,
 ) : DIComponent(componentContext, parentScope, listOf(authModule)), AuthComponent {
 
     private val router = router(
@@ -40,17 +42,18 @@ class AuthComponentImpl(
     private fun childFactory(
         config: Config,
         componentContext: ComponentContext
-    ): AuthComponent.Child =
-        when (config) {
-            is Config.Login -> AuthComponent.Child.Login(LoginComponentImpl(componentContext, scope, openRegister = {
-                router.push(Config.Register)
-            }) {
-                authSuccess()
-            })
-            is Config.Register -> AuthComponent.Child.Register
-        }
+    ): AuthComponent.Child = when (config) {
+        is Config.Login -> AuthComponent.Child.Login(LoginComponentImpl(componentContext, scope, openRegister = {
+            router.push(Config.Register)
+        }) {
+            authSuccess()
+        })
+        is Config.Register -> AuthComponent.Child.Register(RegisterComponentImpl(componentContext, scope) {
+            authSuccess()
+        })
+    }
 
-    sealed interface Config : Parcelable {
+    private sealed interface Config : Parcelable {
         @Parcelize
         object Login : Config
 

@@ -4,26 +4,26 @@ import com.kualagames.shared.model.Profile
 import com.kualagames.shared.model.UserCredentials
 
 fun AuthDTO.toCredentials() : UserCredentials = UserCredentials(
-    expiry = expiry,
-    token = token,
+    id = user.id,
     username = user.userName,
-    id = user.id
+    token = token,
+    expiry = expiry,
 )
 
 fun AuthDTO.toProfile() : Profile = with(user) {
     Profile(
         id = id,
-        userName = userName,
+        username = userName,
         bio = bio ?: "",
         email = email,
         emailVerified = emailVerified,
         firstName = firstName ?: "",
         joinedDate = joinedDate,
         lastName = lastName ?: "",
-        noCityGames = noCityGames,
-        noCityWins = noCityWins,
-        noMafiaGames = noMafiaGames,
-        noMafiaWins = noMafiaWins,
+        noVillagerGames = noCityGames,
+        noVillagerWins = noCityWins,
+        noWerewolfGames = noMafiaGames,
+        noWerewolfWins = noMafiaWins,
         profileImage = profileImage ?: ""
     )
 }

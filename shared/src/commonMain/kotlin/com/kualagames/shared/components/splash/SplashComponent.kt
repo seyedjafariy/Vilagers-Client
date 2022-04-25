@@ -2,10 +2,9 @@ package com.kualagames.shared.components.splash
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
-import com.arkivanov.mvikotlin.rx.Observer
 import com.kualagames.shared.components.DIComponent
 import com.kualagames.shared.utils.addTo
-import com.kualagames.shared.utils.createdCompositeDisposable
+import com.kualagames.shared.utils.createdDisposables
 import com.kualagames.shared.utils.onNextLabel
 import org.koin.core.component.get
 import org.koin.core.scope.Scope
@@ -39,6 +38,6 @@ class SplashComponentImpl(
                 SplashComponent.State.Main -> SplashComponent.Output.Main
             }
             openNext(output)
-        } addTo createdCompositeDisposable
+        } addTo createdDisposables
     }
 }

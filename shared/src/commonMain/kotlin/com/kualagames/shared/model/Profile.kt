@@ -1,17 +1,34 @@
 package com.kualagames.shared.model
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Profile(
+    @SerialName("id")
     val id: String,
-    val userName: String,
+    @SerialName("username")
+    val username: String,
+    @SerialName("bio")
     val bio: String,
+    @SerialName("email")
     val email: String,
+    @SerialName("emailVerified")
     val emailVerified: Boolean,
+    @SerialName("firstName")
     val firstName: String,
-    val joinedDate: String,
+    @SerialName("lastName")
     val lastName: String,
-    val noCityGames: Int,
-    val noCityWins: Int,
-    val noMafiaGames: Int,
-    val noMafiaWins: Int,
+    @SerialName("joinDate")
+    val joinedDate: String,
+    @SerialName("noVillagerGames")
+    val noVillagerGames: Int,
+    @SerialName("noVillagerWins")
+    val noVillagerWins: Int,
+    @SerialName("noWerewolfGames")
+    val noWerewolfGames: Int,
+    @SerialName("noWerewolfWins")
+    val noWerewolfWins: Int,
+    @SerialName("profileImage")
     val profileImage: String,
 )

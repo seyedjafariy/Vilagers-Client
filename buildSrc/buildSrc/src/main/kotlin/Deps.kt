@@ -23,6 +23,8 @@ object Deps {
 
             val serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2"
             val serializationPlugin = "org.jetbrains.kotlin:kotlin-serialization:$VERSION"
+
+            val datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.3.2"
         }
 
         object Compose {

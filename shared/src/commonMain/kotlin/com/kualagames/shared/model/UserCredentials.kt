@@ -1,8 +1,16 @@
 package com.kualagames.shared.model
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class UserCredentials(
-    val expiry: String,
-    val token: String,
-    val username: String,
+    @SerialName("id")
     val id : String,
+    @SerialName("username")
+    val username: String,
+    @SerialName("token")
+    val token: String,
+    @SerialName("expiry")
+    val expiry: String,
 )
