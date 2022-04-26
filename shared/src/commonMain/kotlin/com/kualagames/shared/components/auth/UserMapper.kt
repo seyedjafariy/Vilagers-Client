@@ -2,12 +2,13 @@ package com.kualagames.shared.components.auth
 
 import com.kualagames.shared.model.Profile
 import com.kualagames.shared.model.UserCredentials
+import kotlinx.datetime.toLocalDateTime
 
 fun AuthDTO.toCredentials() : UserCredentials = UserCredentials(
     id = user.id,
     username = user.userName,
     token = token,
-    expiry = expiry,
+    expiry = expiry.toLocalDateTime(),
 )
 
 fun AuthDTO.toProfile() : Profile = with(user) {

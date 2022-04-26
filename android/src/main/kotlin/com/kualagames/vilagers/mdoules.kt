@@ -12,6 +12,7 @@ import com.kualagames.vilagers.BuildConfig.DEBUG
 import com.kualagames.vilagers.database.MainDB
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import com.squareup.sqldelight.db.SqlDriver
+import io.ktor.client.engine.*
 import io.ktor.client.engine.okhttp.*
 import io.ktor.util.*
 import okhttp3.Cache
@@ -36,7 +37,7 @@ val storesModule = module {
 }
 
 val networkEngineModule = module {
-    factory {
+    factory<HttpClientEngine> {
         OkHttpEngine(OkHttpConfig().apply {
             preconfigured = get()
         })

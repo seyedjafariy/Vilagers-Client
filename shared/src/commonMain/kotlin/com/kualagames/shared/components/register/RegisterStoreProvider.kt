@@ -24,7 +24,7 @@ class RegisterStoreProvider(
 
     fun provide(): RegisterStore =
         object : RegisterStore, Store<Intent, State, Label> by storeFactory.create(
-            name = "LoginStore",
+            name = "RegisterStore",
             initialState = State(),
             bootstrapper = SimpleBootstrapper(),
             executorFactory = ::ExecutorImpl,
