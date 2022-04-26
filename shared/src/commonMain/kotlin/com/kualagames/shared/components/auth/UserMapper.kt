@@ -2,13 +2,16 @@ package com.kualagames.shared.components.auth
 
 import com.kualagames.shared.model.Profile
 import com.kualagames.shared.model.UserCredentials
+import com.kualagames.shared.network.jsonSerializer
+import com.kualagames.shared.utils.formatAndParseToLocalDateTime
 import kotlinx.datetime.toLocalDateTime
+import kotlinx.serialization.decodeFromString
 
 fun AuthDTO.toCredentials() : UserCredentials = UserCredentials(
     id = user.id,
     username = user.userName,
     token = token,
-    expiry = expiry.toLocalDateTime(),
+    expiry = expiry.formatAndParseToLocalDateTime(),
 )
 
 fun AuthDTO.toProfile() : Profile = with(user) {
@@ -19,7 +22,7 @@ fun AuthDTO.toProfile() : Profile = with(user) {
         email = email,
         emailVerified = emailVerified,
         firstName = firstName ?: "",
-        joinedDate = joinedDate,
+        joinedDate = joinedDate.formatAndParseToLocalDateTime(),
         lastName = lastName ?: "",
         noVillagerGames = noCityGames,
         noVillagerWins = noCityWins,

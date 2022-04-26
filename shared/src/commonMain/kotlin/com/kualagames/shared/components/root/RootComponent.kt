@@ -8,8 +8,8 @@ import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.parcelable.Parcelable
 import com.arkivanov.essenty.parcelable.Parcelize
 import com.kualagames.shared.components.DIComponent
-import com.kualagames.shared.components.MainComponent
-import com.kualagames.shared.components.MainComponentImpl
+import com.kualagames.shared.components.main.MainComponent
+import com.kualagames.shared.components.main.MainComponentImpl
 import com.kualagames.shared.components.auth.AuthComponent
 import com.kualagames.shared.components.auth.AuthComponentImpl
 import com.kualagames.shared.components.splash.SplashComponent
@@ -47,6 +47,7 @@ class RootComponentImpl(
             is Config.Main -> RootComponent.Child.Main(
                 MainComponentImpl(
                     componentContext,
+                    scope,
                 )
             )
             is Config.Auth -> RootComponent.Child.Auth(

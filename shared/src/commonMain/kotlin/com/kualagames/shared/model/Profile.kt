@@ -1,5 +1,6 @@
 package com.kualagames.shared.model
 
+import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -20,7 +21,7 @@ data class Profile(
     @SerialName("lastName")
     val lastName: String,
     @SerialName("joinDate")
-    val joinedDate: String,
+    val joinedDate: LocalDateTime,
     @SerialName("noVillagerGames")
     val noVillagerGames: Int,
     @SerialName("noVillagerWins")

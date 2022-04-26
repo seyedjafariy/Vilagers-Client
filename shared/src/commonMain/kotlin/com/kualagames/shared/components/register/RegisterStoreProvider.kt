@@ -80,9 +80,9 @@ class RegisterStoreProvider(
                 dispatch(Message.Loading)
 
                 val response = api.register(
-                    email = intent.email,
-                    username = intent.username,
-                    password = intent.password
+                    email = intent.email.trim(),
+                    username = intent.username.trim(),
+                    password = intent.password.trim(),
                 )
 
                 if (response.isSuccessful) {
