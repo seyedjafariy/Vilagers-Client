@@ -58,7 +58,7 @@ class UserInfoRepository(
     }
 
     suspend fun loadFromStorage(): Unit = lock.withLock {
-        if (userLoaded) {
+        if (credentialsLoaded) {
             //someone else loaded the data, we don't need to again
             return@withLock
         }
@@ -68,17 +68,24 @@ class UserInfoRepository(
                 .get(KEY_USER_CREDENTIALS)
                 ?.let { jsonSerializer.decodeFromString(it) }
 
-        val profile: Profile? =
+        val profile: Profile? = if (userCredentials == null) {
+            settingStorage.put(KEY_USER_PROFILE, null)
+            null
+        } else {
             settingStorage
                 .get(KEY_USER_PROFILE)
                 ?.let { jsonSerializer.decodeFromString(it) }
+        }
 
         internalUser = userCredentials
         internalProfile = profile
     }
+
+    suspend fun credentialExists() : Boolean =
+        settingStorage.get(KEY_USER_CREDENTIALS) != null
 }
 
-val UserInfoRepository.userLoaded: Boolean
+val UserInfoRepository.credentialsLoaded: Boolean
     get() = getCredentialsOrNull() != null
 
 private const val KEY_USER_CREDENTIALS = "KEY_USER_CREDENTIALS"

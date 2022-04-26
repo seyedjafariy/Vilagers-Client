@@ -6,14 +6,13 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.kualagames.shared.components.auth.AuthAPI
-import com.kualagames.shared.storages.UserInfoRepository
 import com.kualagames.shared.components.auth.toCredentials
 import com.kualagames.shared.components.auth.toProfile
 import com.kualagames.shared.components.register.RegisterComponent.State
 import com.kualagames.shared.components.register.RegisterStore.Intent
 import com.kualagames.shared.components.register.RegisterStore.Label
-import com.kualagames.shared.components.profile.ProfileRepository
 import com.kualagames.shared.network.successBody
+import com.kualagames.shared.storages.UserInfoRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -21,7 +20,6 @@ class RegisterStoreProvider(
     private val storeFactory: StoreFactory,
     private val api: AuthAPI,
     private val userInfoRepository: UserInfoRepository,
-    private val profileRepository: ProfileRepository,
 ) {
 
     fun provide(): RegisterStore =
@@ -90,8 +88,7 @@ class RegisterStoreProvider(
                 if (response.isSuccessful) {
                     val body = response.successBody
 
-                    userInfoRepository.store(body.toCredentials())
-                    profileRepository.store(body.toProfile())
+                    userInfoRepository.store(body.toCredentials(), body.toProfile())
 
                     publish(Label.Success)
                 } else {

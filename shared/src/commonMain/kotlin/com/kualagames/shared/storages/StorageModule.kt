@@ -3,7 +3,7 @@ package com.kualagames.shared.storages
 import org.koin.dsl.module
 
 val storageModule = module {
-    single { UserInfoRepository() }
+    single { UserInfoRepository(get()) }
 
     factory { SettingsStorage(get()) }
 }

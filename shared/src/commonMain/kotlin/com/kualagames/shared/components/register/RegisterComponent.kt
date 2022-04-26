@@ -15,6 +15,8 @@ interface RegisterComponent {
 
     val state : Value<State>
 
+    fun onRegisterClicked(username : String, email : String, password : String)
+
     data class State(
         val loading : Boolean = false,
         val showRegisterFailed : Boolean = false,
@@ -38,7 +40,7 @@ class RegisterComponentImpl(
     componentContext: ComponentContext,
     parentScope: Scope,
     private val registerSuccess : () -> Unit,
-) : DIComponent(componentContext, parentScope), RegisterComponent {
+) : DIComponent(componentContext, parentScope, listOf(registerModule)), RegisterComponent {
 
     private val store : RegisterStore = instanceKeeper.getStore {
         get<RegisterStore>()
@@ -51,4 +53,8 @@ class RegisterComponentImpl(
     }
     override val state: Value<RegisterComponent.State> =
         store.asValue()
+
+    override fun onRegisterClicked(username: String, email: String, password: String) {
+        store.accept(RegisterStore.Intent.Register(email, username, password))
+    }
 }
