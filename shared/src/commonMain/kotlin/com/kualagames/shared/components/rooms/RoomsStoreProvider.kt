@@ -7,10 +7,11 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.kualagames.shared.components.rooms.RoomsComponent.State
 import com.kualagames.shared.components.rooms.RoomsStore.Intent
+import kotlinx.coroutines.launch
 
 class RoomsStoreProvider(
     private val storeFactory: StoreFactory,
-    private val api : RoomsAPI,
+    private val api: RoomsAPI,
 ) {
 
     fun provide(): RoomsStore =
@@ -48,8 +49,19 @@ class RoomsStoreProvider(
             }
         }
 
-        private fun loadRooms(){
+        private fun loadRooms() {
+            scope.launch {
+                dispatch(Message.Loading)
 
+                val response = api.fetchWaitingRooms()
+
+                if (response.isSuccessful) {
+
+                } else {
+
+                }
+                dispatch(Message.StopLoading)
+            }
         }
     }
 

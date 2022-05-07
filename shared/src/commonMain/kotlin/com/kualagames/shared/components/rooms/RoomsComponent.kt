@@ -10,10 +10,11 @@ import org.koin.core.scope.Scope
 
 interface RoomsComponent {
 
-    val state : Value<State>
+    val state: Value<State>
 
     data class State(
-        val loading: Boolean = false
+        val loading: Boolean = false,
+        val user: String = "",
     )
 }
 
@@ -22,7 +23,7 @@ class RoomsComponentImpl(
     parentScope: Scope,
 ) : DIComponent(componentContext, parentScope, listOf(roomsModule)), RoomsComponent {
 
-    private val store : RoomsStore = instanceKeeper.getStore {
+    private val store: RoomsStore = instanceKeeper.getStore {
         get()
     }
 

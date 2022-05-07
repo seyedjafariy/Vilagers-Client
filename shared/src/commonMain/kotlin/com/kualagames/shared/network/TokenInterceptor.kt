@@ -8,7 +8,7 @@ import io.ktor.util.*
 
 class TokenInterceptor(
     private val userInfoRepository: UserInfoRepository,
-    private val requestsWithoutAuthorization: Set<String>
+    private val excludedPaths: Set<String>
 ) {
 
     private suspend fun refreshToken(
@@ -35,7 +35,7 @@ class TokenInterceptor(
     private suspend fun processRequest(client: HttpClient, context: HttpRequestBuilder) {
         val url = context.url.encodedPath
         val user = userInfoRepository.getCredentialsOrNull()
-        if (requestsWithoutAuthorization.contains(url) || user == null) {
+        if (excludedPaths.contains(url) || user == null) {
             return
         } else {
             val accessToken = user.token
@@ -51,7 +51,7 @@ class TokenInterceptor(
 
     class Config {
         lateinit var userInfoRepository: UserInfoRepository
-        lateinit var requestsWithoutAuthorization: Set<String>
+        lateinit var excludedPaths: Set<String>
     }
 
     companion object : HttpClientFeature<Config, TokenInterceptor> {
@@ -62,7 +62,7 @@ class TokenInterceptor(
             val config = Config().apply(block)
             return TokenInterceptor(
                 config.userInfoRepository,
-                config.requestsWithoutAuthorization
+                config.excludedPaths
             )
         }
 

@@ -1,5 +1,6 @@
 package com.kualagames.shared.model
 
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -13,5 +14,5 @@ data class UserCredentials(
     @SerialName("token")
     val token: String,
     @SerialName("expiry")
-    val expiry: LocalDateTime,
+    val expiry: Instant,
 )

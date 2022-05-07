@@ -10,9 +10,9 @@ import org.koin.dsl.module
 
 internal val networkModule = module {
     single {
-        val engine : HttpClientEngine? = getOrNull()
+        val engine: HttpClientEngine? = getOrNull()
 
-        val clientConfig : HttpClientConfig<*>.() -> Unit = get()
+        val clientConfig: HttpClientConfig<*>.() -> Unit = get()
 
         if (engine == null) {
             HttpClient(clientConfig)
@@ -33,11 +33,13 @@ internal val networkModule = module {
 
             install(TokenInterceptor) {
                 this.userInfoRepository = get()
-                this.requestsWithoutAuthorization = setOf("api/auth/login")
+                this.excludedPaths = setOf(
+                    "api/auth/login",
+                    "api/auth/register",
+                )
             }
 
-            install(APIKeyInterceptor){
-            }
+            install(APIKeyInterceptor) {}
 
             defaultRequest {
                 url {

@@ -102,7 +102,7 @@ private fun InternalRegisterScreen(
     )
 
     if (state.showRegisterFailed) {
-        Text(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp), text = "Login failed")
+        Text(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp), text = "Registering failed")
     } else if (state.loading) {
         CircularProgressIndicator()
     } else {
