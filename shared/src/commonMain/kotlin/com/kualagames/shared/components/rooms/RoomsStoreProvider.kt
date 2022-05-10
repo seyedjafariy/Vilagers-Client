@@ -7,6 +7,7 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.kualagames.shared.components.rooms.RoomsComponent.State
 import com.kualagames.shared.components.rooms.RoomsStore.Intent
+import com.kualagames.shared.components.rooms.RoomsStore.Label
 import kotlinx.coroutines.launch
 
 class RoomsStoreProvider(
@@ -15,7 +16,7 @@ class RoomsStoreProvider(
 ) {
 
     fun provide(): RoomsStore =
-        object : RoomsStore, Store<Intent, State, Nothing> by storeFactory.create(
+        object : RoomsStore, Store<Intent, State, Label> by storeFactory.create(
             name = "RoomsStore",
             initialState = State(),
             bootstrapper = SimpleBootstrapper(Action.LoadRooms),
@@ -34,7 +35,7 @@ class RoomsStoreProvider(
     }
 
     // Logic should take place in the executor
-    private inner class ExecutorImpl : CoroutineExecutor<Intent, Action, State, Message, Nothing>() {
+    private inner class ExecutorImpl : CoroutineExecutor<Intent, Action, State, Message, Label>() {
 
         override fun executeAction(action: Action, getState: () -> State) {
             when (action) {
@@ -46,6 +47,7 @@ class RoomsStoreProvider(
 
         override fun executeIntent(intent: Intent, getState: () -> State) {
             when (intent) {
+                Intent.NewRoom -> publish(Label.PickRoomName)
             }
         }
 

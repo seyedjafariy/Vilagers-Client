@@ -3,6 +3,7 @@ package com.kualagames.compose.ui.main
 import androidx.compose.runtime.Composable
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.jetbrains.Children
+import com.kualagames.compose.ui.room_name_picker.RoomNamePickerScreen
 import com.kualagames.compose.ui.rooms.RoomsScreen
 import com.kualagames.shared.components.main.MainComponent
 
@@ -11,5 +12,6 @@ import com.kualagames.shared.components.main.MainComponent
 fun MainScreen(component: MainComponent) = Children(component.routerState) {
     when (val child = it.instance) {
         is MainComponent.Child.Rooms -> RoomsScreen(child.component)
+        is MainComponent.Child.RoomNamePicker -> RoomNamePickerScreen(child.component)
     }
 }
