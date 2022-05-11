@@ -1,10 +1,32 @@
 package com.kualagames.shared.components.room_name_picker
 
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.value.Value
+import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.kualagames.shared.components.DIComponent
+import com.kualagames.shared.components.room_name_picker.RoomNamePickerStore.Intent
+import com.kualagames.shared.utils.addTo
+import com.kualagames.shared.utils.asValue
+import com.kualagames.shared.utils.createdDisposables
+import com.kualagames.shared.utils.onNextLabel
+import org.koin.core.component.get
 import org.koin.core.scope.Scope
 
 interface RoomNamePickerComponent {
+
+    val state : Value<State>
+
+    data class State(
+        val nameError: RoomNameError = RoomNameError.No,
+        val loading : Boolean = false,
+        val nameCheckFailed : Boolean = false,
+    ) {
+        enum class RoomNameError {
+            No,
+            PickAName,
+            Duplicate,
+        }
+    }
 
     fun onCreateRoomClicked(roomName: String)
 }
@@ -12,11 +34,24 @@ interface RoomNamePickerComponent {
 class RoomNamePickerComponentImpl(
     componentContext: ComponentContext,
     parentScope: Scope,
-) : DIComponent(componentContext, parentScope), RoomNamePickerComponent {
+    private val createRoom: (String) -> Unit,
+) : DIComponent(componentContext, parentScope, listOf(roomNamePickerModule)), RoomNamePickerComponent {
+
+    private val store: RoomNamePickerStore = instanceKeeper.getStore {
+        get<RoomNamePickerStore>()
+    }.apply {
+        onNextLabel {
+            when (it) {
+                is RoomNamePickerStore.Label.CreateRoom -> {
+                    createRoom(it.roomName)
+                }
+            }
+        } addTo createdDisposables
+    }
+    override val state: Value<RoomNamePickerComponent.State> =
+        store.asValue()
+
     override fun onCreateRoomClicked(roomName: String) {
-        //no need for a store in this component
-        //validate the name here
-        //call some callback on the component and change the screen using the parent component
-        TODO("Not yet implemented")
+        store.accept(Intent.CreateRoom(roomName))
     }
 }

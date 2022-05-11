@@ -44,7 +44,9 @@ class MainComponentImpl(
             Config.Rooms -> Child.Rooms(RoomsComponentImpl(componentContext, scope) {
                 router.push(Config.RoomNamePicker)
             })
-            Config.RoomNamePicker -> Child.RoomNamePicker(RoomNamePickerComponentImpl(componentContext, scope))
+            Config.RoomNamePicker -> Child.RoomNamePicker(RoomNamePickerComponentImpl(componentContext, scope){
+                //TODO route to Waiting room
+            })
         }
 
     private sealed interface Config : Parcelable {

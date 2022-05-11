@@ -8,11 +8,10 @@ class RoomsAPI(
     private val client: HttpClient,
 ) {
 
-    suspend fun fetchWaitingRooms() = client.executeRequest<Unit> {
+    suspend fun fetchWaitingRooms() = client.executeRequest<Map<String, List<RoomDTO>>> {
         method = HttpMethod.Get
         url {
             encodedPath = "api/game/rooms/all"
         }
     }
-
 }
