@@ -12,6 +12,6 @@ interface RoomNamePickerStore : Store<Intent, State, Label> {
     }
 
     sealed interface Label {
-        data class CreateRoom(val roomName : String) : Label
+        data class CreateRoom(val roomName : String, val gameModeId : String,) : Label
     }
 }

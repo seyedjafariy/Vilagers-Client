@@ -34,7 +34,7 @@ interface RoomNamePickerComponent {
 class RoomNamePickerComponentImpl(
     componentContext: ComponentContext,
     parentScope: Scope,
-    private val createRoom: (String) -> Unit,
+    private val createRoom: (String, String) -> Unit,
 ) : DIComponent(componentContext, parentScope, listOf(roomNamePickerModule)), RoomNamePickerComponent {
 
     private val store: RoomNamePickerStore = instanceKeeper.getStore {
@@ -43,7 +43,7 @@ class RoomNamePickerComponentImpl(
         onNextLabel {
             when (it) {
                 is RoomNamePickerStore.Label.CreateRoom -> {
-                    createRoom(it.roomName)
+                    createRoom(it.roomName, it.gameModeId)
                 }
             }
         } addTo createdDisposables

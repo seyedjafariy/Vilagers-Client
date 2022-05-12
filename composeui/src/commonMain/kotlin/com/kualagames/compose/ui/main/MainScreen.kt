@@ -14,6 +14,6 @@ fun MainScreen(component: MainComponent) = Children(component.routerState) {
     when (val child = it.instance) {
         is MainComponent.Child.Rooms -> RoomsScreen(child.component)
         is MainComponent.Child.RoomNamePicker -> RoomNamePickerScreen(child.component)
-        MainComponent.Child.WaitingRoom -> WaitingRoomScreen()
+        is MainComponent.Child.WaitingRoom -> WaitingRoomScreen(child.component)
     }
 }

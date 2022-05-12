@@ -4,9 +4,9 @@ import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import com.kualagames.shared.components.room_name_picker.RoomNamePickerComponent.State
 import com.kualagames.shared.components.room_name_picker.RoomNamePickerStore.Intent
 import com.kualagames.shared.components.room_name_picker.RoomNamePickerStore.Label
-import com.kualagames.shared.components.room_name_picker.RoomNamePickerComponent.State
 import com.kualagames.shared.components.rooms.RoomsAPI
 import com.kualagames.shared.network.successBody
 import kotlinx.coroutines.delay
@@ -80,8 +80,20 @@ class RoomNamePickerStoreProvider(
                     return@launch
                 }
 
+                val gameModesResponse = api.fetchGameModes()
+
+                if (gameModesResponse.isNotSuccessful) {
+                    dispatch(Message.StopLoading)
+                    dispatch(Message.Failed)
+                    delay(3000)
+                    dispatch(Message.ClearErrors)
+                    return@launch
+                }
+
+                val gameModeId = gameModesResponse.successBody.first().id
+
                 dispatch(Message.StopLoading)
-                publish(Label.CreateRoom(name))
+                publish(Label.CreateRoom(name, gameModeId))
             }
         }
     }
