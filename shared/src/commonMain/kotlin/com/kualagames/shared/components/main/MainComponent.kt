@@ -2,6 +2,7 @@ package com.kualagames.shared.components.main
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.RouterState
+import com.arkivanov.decompose.router.navigate
 import com.arkivanov.decompose.router.push
 import com.arkivanov.decompose.router.router
 import com.arkivanov.decompose.value.Value
@@ -22,6 +23,7 @@ interface MainComponent {
     sealed interface Child {
         class Rooms(val component: RoomsComponent) : Child
         class RoomNamePicker(val component: RoomNamePickerComponent) : Child
+        object WaitingRoom : Child
     }
 }
 
@@ -44,9 +46,15 @@ class MainComponentImpl(
             Config.Rooms -> Child.Rooms(RoomsComponentImpl(componentContext, scope) {
                 router.push(Config.RoomNamePicker)
             })
-            Config.RoomNamePicker -> Child.RoomNamePicker(RoomNamePickerComponentImpl(componentContext, scope){
-                //TODO route to Waiting room
+            Config.RoomNamePicker -> Child.RoomNamePicker(RoomNamePickerComponentImpl(componentContext, scope) { roomName ->
+                router.navigate {
+                    val mutableConfigs = it.toMutableList()
+                    mutableConfigs.remove(Config.RoomNamePicker)
+                    mutableConfigs.add(Config.WaitingRoom(roomName))
+                    mutableConfigs
+                }
             })
+            is Config.WaitingRoom -> Child.WaitingRoom
         }
 
     private sealed interface Config : Parcelable {
@@ -56,5 +64,8 @@ class MainComponentImpl(
 
         @Parcelize
         object RoomNamePicker : Config
+
+        @Parcelize
+        data class WaitingRoom(val name: String) : Config
     }
 }

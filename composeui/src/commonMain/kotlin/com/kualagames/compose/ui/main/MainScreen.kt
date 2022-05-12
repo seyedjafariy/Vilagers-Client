@@ -5,6 +5,7 @@ import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.jetbrains.Children
 import com.kualagames.compose.ui.room_name_picker.RoomNamePickerScreen
 import com.kualagames.compose.ui.rooms.RoomsScreen
+import com.kualagames.compose.ui.waiting_room.WaitingRoomScreen
 import com.kualagames.shared.components.main.MainComponent
 
 @OptIn(ExperimentalDecomposeApi::class)
@@ -13,5 +14,6 @@ fun MainScreen(component: MainComponent) = Children(component.routerState) {
     when (val child = it.instance) {
         is MainComponent.Child.Rooms -> RoomsScreen(child.component)
         is MainComponent.Child.RoomNamePicker -> RoomNamePickerScreen(child.component)
+        MainComponent.Child.WaitingRoom -> WaitingRoomScreen()
     }
 }

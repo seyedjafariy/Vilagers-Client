@@ -22,7 +22,7 @@ fun RoomNamePickerScreen(component: RoomNamePickerComponent) {
 
 @Composable
 private fun InternalRoomNamePickerScreen(state: State, component: RoomNamePickerComponent) =
-    Column(verticalArrangement = Arrangement.Center) {
+    Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
         var nameState by remember { mutableStateOf("") }
 
         TextField(

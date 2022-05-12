@@ -45,8 +45,8 @@ class SplashStoreProvider(
                 val userExists = userInfoRepository.credentialExists()
 
                 if (userExists) {
-                    publish(State.Main)
                     userInfoRepository.loadFromStorage()
+                    publish(State.Main)
                 } else {
                     publish(State.Auth)
                 }

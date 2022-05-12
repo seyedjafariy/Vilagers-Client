@@ -49,3 +49,14 @@ fun <T> Response<T>.bodyOrNull(whenNull: (Response.Error) -> T): T {
     }
 }
 
+fun <T, R> Response<T>.mapBody(mapper: (T) -> R): Response<R> {
+    return if (this is Response.Success.WithBody<T>) {
+        Response.Success.WithBody<R>(this.status, mapper(this.body))
+    } else {
+        @Suppress("UNCHECKED_CAST")
+        this as Response<R>
+    }
+}
+
+fun <T> Response<Map<String, List<T>>>.mapToList(listKey : String) : Response<List<T>> =
+    mapBody { it[listKey]!! }

@@ -68,7 +68,7 @@ class RoomNamePickerStoreProvider(
                     return@launch
                 }
 
-                val rooms = roomsResponse.successBody["rooms"]!!
+                val rooms = roomsResponse.successBody
 
                 val duplicateName = rooms.any { it.roomName == name }
 
