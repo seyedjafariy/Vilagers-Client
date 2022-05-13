@@ -8,6 +8,7 @@ import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.kualagames.shared.components.rooms.RoomsComponent.State
 import com.kualagames.shared.components.rooms.RoomsStore.Intent
 import com.kualagames.shared.components.rooms.RoomsStore.Label
+import com.kualagames.shared.network.successBody
 import kotlinx.coroutines.launch
 
 class RoomsStoreProvider(
@@ -31,6 +32,7 @@ class RoomsStoreProvider(
     private sealed interface Message {
         object Loading : Message
         object StopLoading : Message
+        data class Loaded(val rooms: List<Room>) : Message
 
     }
 
@@ -57,12 +59,10 @@ class RoomsStoreProvider(
 
                 val response = api.fetchWaitingRooms()
 
-                if (response.isSuccessful) {
-
-                } else {
-
-                }
                 dispatch(Message.StopLoading)
+                if (response.isSuccessful) {
+                    dispatch(Message.Loaded(response.successBody.map { it.toDomain() }))
+                }
             }
         }
     }
@@ -73,6 +73,7 @@ class RoomsStoreProvider(
             when (msg) {
                 is Message.Loading -> copy(loading = true)
                 Message.StopLoading -> copy(loading = false)
+                is Message.Loaded -> copy(rooms = msg.rooms)
             }
     }
 }

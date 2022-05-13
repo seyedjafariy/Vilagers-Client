@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 
 class WaitingRoomStoreProvider(
     private val storeFactory: StoreFactory,
-    private val roomsAPI: RoomsAPI,
+    private val roomManager: RoomManager,
 ) {
 
     fun provide(connection: Action.Connection): WaitingRoomStore =
@@ -38,8 +38,7 @@ class WaitingRoomStoreProvider(
         }
     }
 
-    private inner class ExecutorImpl :
-        CoroutineExecutor<Intent, Action, State, Message, Label>() {
+    private inner class ExecutorImpl : CoroutineExecutor<Intent, Action, State, Message, Label>() {
 
         override fun executeAction(action: Action, getState: () -> State) {
             when (action) {
@@ -47,14 +46,23 @@ class WaitingRoomStoreProvider(
                     createRoom(action)
                 }
                 is Action.Connection.Join -> {
-                    TODO()
+                    joinRoom(action)
                 }
             }
         }
 
         private fun createRoom(action: Action.Connection.Create) {
             scope.launch {
-                roomsAPI.createRoom(action.roomName, action.gameModeId)
+                roomManager.createNewAndObserve(action.roomName, action.gameModeId)
+                    .collect {
+                        dispatch(Message.NewUpdate(it))
+                    }
+            }
+        }
+
+        private fun joinRoom(action: Action.Connection.Join) {
+            scope.launch {
+                roomManager.joinAndObserve(action.roomName)
                     .collect {
                         dispatch(Message.NewUpdate(it))
                     }

@@ -19,15 +19,18 @@ interface RoomsComponent {
     data class State(
         val loading: Boolean = false,
         val user: String = "",
+        val rooms: List<Room> = emptyList(),
     )
 
     fun onNewRoomClicked()
+    fun onRoomClicked(room: Room)
 }
 
 class RoomsComponentImpl(
     componentContext: ComponentContext,
     parentScope: Scope,
     openRoomNamePicker: () -> Unit,
+    private val openWaitingRoom: (Room) -> Unit,
 ) : DIComponent(componentContext, parentScope, listOf(roomsModule)), RoomsComponent {
 
     private val store: RoomsStore = instanceKeeper.getStore {
@@ -47,5 +50,9 @@ class RoomsComponentImpl(
 
     override fun onNewRoomClicked() {
         store.accept(Intent.NewRoom)
+    }
+
+    override fun onRoomClicked(room: Room) {
+        openWaitingRoom(room)
     }
 }

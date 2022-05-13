@@ -12,4 +12,8 @@ data class RoomDTO(
     val roomHost: UserDTO,
     @SerialName("users")
     val users: List<UserDTO>,
+    @SerialName("status")
+    val status: String,
+    @SerialName("gameId")
+    val gameId: String? = null,
 )

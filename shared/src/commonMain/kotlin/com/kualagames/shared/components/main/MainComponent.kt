@@ -45,17 +45,23 @@ class MainComponentImpl(
 
     private fun createChild(config: Config, componentContext: ComponentContext): Child =
         when (config) {
-            Config.Rooms -> Child.Rooms(RoomsComponentImpl(componentContext, scope) {
+            Config.Rooms -> Child.Rooms(RoomsComponentImpl(componentContext, scope, {
                 router.push(Config.RoomNamePicker)
+            }) {
+                router.push(Config.WaitingRoom(WaitingRoomComponent.Input.JoinRoom(it.name)))
             })
-            Config.RoomNamePicker -> Child.RoomNamePicker(RoomNamePickerComponentImpl(componentContext, scope) { roomName, gameModeId ->
-                router.navigate {
-                    val mutableConfigs = it.toMutableList()
-                    mutableConfigs.remove(Config.RoomNamePicker)
-                    mutableConfigs.add(Config.WaitingRoom(WaitingRoomComponent.Input.CreateNewRoom(roomName, gameModeId)))
-                    mutableConfigs
-                }
-            })
+            Config.RoomNamePicker -> Child.RoomNamePicker(
+                RoomNamePickerComponentImpl(
+                    componentContext,
+                    scope
+                ) { roomName, gameModeId ->
+                    router.navigate {
+                        val mutableConfigs = it.toMutableList()
+                        mutableConfigs.remove(Config.RoomNamePicker)
+                        mutableConfigs.add(Config.WaitingRoom(WaitingRoomComponent.Input.CreateNewRoom(roomName, gameModeId)))
+                        mutableConfigs
+                    }
+                })
             is Config.WaitingRoom -> Child.WaitingRoom(WaitingRoomComponentImpl(componentContext, scope, config.input))
         }
 
@@ -68,6 +74,6 @@ class MainComponentImpl(
         object RoomNamePicker : Config
 
         @Parcelize
-        data class WaitingRoom(val input : WaitingRoomComponent.Input) : Config
+        data class WaitingRoom(val input: WaitingRoomComponent.Input) : Config
     }
 }
