@@ -2,9 +2,13 @@ package com.kualagames.shared.components.rooms
 
 import com.kualagames.shared.model.dto.GameModeDTO
 import com.kualagames.shared.model.dto.ListWrapperDTO
-import com.kualagames.shared.network.executeRequest
-import com.kualagames.shared.network.mapToList
+import com.kualagames.shared.network.*
+import com.kualagames.shared.storages.UserInfoRepository
 import io.ktor.client.*
+import io.ktor.client.engine.*
+import io.ktor.client.features.*
+import io.ktor.client.features.json.*
+import io.ktor.client.features.json.serializer.*
 import io.ktor.client.features.websocket.*
 import io.ktor.http.*
 import io.ktor.http.cio.websocket.*
@@ -22,6 +26,7 @@ class RoomsAPI(
 ) {
 
     suspend fun fetchWaitingRooms() = client.executeRequest<ListWrapperDTO<RoomDTO>> {
+        defaultRequest()
         method = HttpMethod.Get
         url {
             encodedPath = "api/game/rooms/all"
@@ -29,6 +34,7 @@ class RoomsAPI(
     }.mapToList("rooms")
 
     suspend fun fetchGameModes() = client.executeRequest<ListWrapperDTO<GameModeDTO>> {
+        defaultRequest()
         method = HttpMethod.Get
         url {
             encodedPath = "api/game/modes"
@@ -36,13 +42,10 @@ class RoomsAPI(
     }.mapToList("modes")
 
     fun createRoom(roomName: String, gameModeId: String) = callbackFlow<String> {
-        client.webSocket({
+        client.webSocket(urlString = "wss://vilagers.com/api/game/rooms/new/$roomName",{
             headers.append("gameMode", gameModeId)
-            url {
-                protocol = URLProtocol.WSS
-                encodedPath = "api/game/rooms/new/$roomName"
-            }
-        }) {
+
+        }){
             handleRoomSocket(this@callbackFlow, this)
         }
     }

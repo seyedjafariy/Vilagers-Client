@@ -2,6 +2,7 @@ package com.kualagames.shared.components.auth
 
 import com.kualagames.shared.network.Response
 import com.kualagames.shared.network.addFormData
+import com.kualagames.shared.network.defaultRequest
 import com.kualagames.shared.network.executeRequest
 import io.ktor.client.*
 import io.ktor.client.request.*
@@ -11,6 +12,7 @@ class AuthAPI(
     private val client: HttpClient
 ) {
     suspend fun echo(): Response<Map<String, List<String>>> = client.executeRequest {
+        defaultRequest()
         method = HttpMethod.Get
         url {
             encodedPath = "api/echo"
@@ -21,6 +23,7 @@ class AuthAPI(
     }
 
     suspend fun login(username : String, password : String) : Response<AuthDTO> = client.executeRequest {
+        defaultRequest()
         method = HttpMethod.Post
         url {
             encodedPath = "api/auth/login"
@@ -32,6 +35,7 @@ class AuthAPI(
     }
 
     suspend fun register(email : String, username : String, password : String) : Response<AuthDTO> = client.executeRequest {
+        defaultRequest()
         method = HttpMethod.Post
         url {
             encodedPath = "api/auth/register"

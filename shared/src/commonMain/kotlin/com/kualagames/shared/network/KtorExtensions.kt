@@ -16,3 +16,12 @@ fun HttpRequestBuilder.addFormData(vararg params: Pair<String, String>) {
         }
     })
 }
+
+fun HttpRequestBuilder.defaultRequest() {
+    url {
+        protocol = URLProtocol.HTTPS
+        host = BASE_URL
+    }
+}
+
+private const val BASE_URL = "vilagers.com"

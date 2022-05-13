@@ -5,6 +5,7 @@ import io.ktor.client.engine.*
 import io.ktor.client.features.*
 import io.ktor.client.features.json.*
 import io.ktor.client.features.json.serializer.*
+import io.ktor.client.features.websocket.*
 import io.ktor.http.*
 import org.koin.dsl.module
 
@@ -31,6 +32,8 @@ internal val networkModule = module {
 //        level = LogLevel.ALL
 //    }
 
+            install(WebSockets)
+
             install(TokenInterceptor) {
                 this.userInfoRepository = get()
                 this.excludedPaths = setOf(
@@ -40,15 +43,6 @@ internal val networkModule = module {
             }
 
             install(APIKeyInterceptor) {}
-
-            defaultRequest {
-                url {
-                    protocol = URLProtocol.HTTPS
-                    host = BASE_URL
-                }
-            }
         }
     }
 }
-
-private const val BASE_URL = "vilagers.com"

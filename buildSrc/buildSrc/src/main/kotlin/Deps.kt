@@ -107,6 +107,7 @@ object Deps {
 
         val common = "io.ktor:ktor-client-core:${VERSION}"
         val jvm = "io.ktor:ktor-client-core-jvm:${VERSION}"
+        val websocket = "io.ktor:ktor-client-websockets:${VERSION}"
 
         val okHttp = "io.ktor:ktor-client-okhttp:${VERSION}"
         val ios = "io.ktor:ktor-client-ios:${VERSION}"

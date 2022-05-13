@@ -25,6 +25,7 @@ kotlin {
                 implementation(Deps.Koin.koin)
 
                 implementation(Deps.Ktor.common)
+                implementation(Deps.Ktor.websocket)
                 implementation(Deps.Ktor.Json.common)
                 implementation(Deps.Ktor.Serialization.common)
                 implementation(Deps.JetBrains.Kotlin.serialization)
