@@ -20,7 +20,11 @@ interface WaitingRoomComponent {
     val state: Value<State>
 
     data class State(
-        val remoteMessages: String = "start"
+        val roomName : String = "",
+        val remoteMessages: String = "start",
+        val users : List<String> = emptyList(),
+        val showStartButton : Boolean = false,
+        val enableStartButton : Boolean = false,
     )
 
     sealed interface Input : Parcelable {
@@ -35,6 +39,8 @@ interface WaitingRoomComponent {
             val roomName: String,
         ) : Input
     }
+
+    fun onStartGameClicked()
 }
 
 class WaitingRoomComponentImpl(
@@ -52,6 +58,10 @@ class WaitingRoomComponentImpl(
     }
     override val state: Value<WaitingRoomComponent.State> =
         store.asValue()
+
+    override fun onStartGameClicked() {
+        store.accept(WaitingRoomStore.Intent.StartGame)
+    }
 }
 
 private fun Input.toConnection() =

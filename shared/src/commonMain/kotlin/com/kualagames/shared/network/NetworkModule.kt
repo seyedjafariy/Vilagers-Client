@@ -2,11 +2,10 @@ package com.kualagames.shared.network
 
 import io.ktor.client.*
 import io.ktor.client.engine.*
-import io.ktor.client.features.*
 import io.ktor.client.features.json.*
 import io.ktor.client.features.json.serializer.*
 import io.ktor.client.features.websocket.*
-import io.ktor.http.*
+import kotlinx.serialization.json.Json
 import org.koin.dsl.module
 
 internal val networkModule = module {
@@ -19,6 +18,16 @@ internal val networkModule = module {
             HttpClient(clientConfig)
         } else {
             HttpClient(engine, clientConfig)
+        }
+    }
+
+    factory {
+        Json {
+            encodeDefaults = true
+            isLenient = true
+            allowSpecialFloatingPointValues = true
+            allowStructuredMapKeys = true
+            prettyPrint = false
         }
     }
 

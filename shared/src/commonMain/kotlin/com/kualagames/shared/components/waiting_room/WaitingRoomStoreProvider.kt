@@ -5,10 +5,13 @@ import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.kualagames.shared.components.rooms.RoomsAPI
+import com.kualagames.shared.components.auth.toProfile
+import com.kualagames.shared.components.rooms.Room
 import com.kualagames.shared.components.waiting_room.WaitingRoomComponent.State
 import com.kualagames.shared.components.waiting_room.WaitingRoomStore.Intent
 import com.kualagames.shared.components.waiting_room.WaitingRoomStore.Label
+import com.kualagames.shared.model.Profile
+import com.kualagames.shared.utils.exhaustive
 import kotlinx.coroutines.launch
 
 class WaitingRoomStoreProvider(
@@ -27,7 +30,12 @@ class WaitingRoomStoreProvider(
         ) {}
 
     sealed interface Message {
+        data class RoomName(val name: String) : Message
         data class NewUpdate(val update: String) : Message
+        data class UserUpdate(val users: List<Profile>) : Message
+        object ShowStartButton : Message
+        object EnableStartButton : Message
+        object DisableStartButton : Message
     }
 
     sealed interface Action {
@@ -43,19 +51,29 @@ class WaitingRoomStoreProvider(
         override fun executeAction(action: Action, getState: () -> State) {
             when (action) {
                 is Action.Connection.Create -> {
+                    dispatch(Message.RoomName(action.roomName))
+                    dispatch(Message.ShowStartButton)
                     createRoom(action)
                 }
                 is Action.Connection.Join -> {
+                    dispatch(Message.RoomName(action.roomName))
                     joinRoom(action)
                 }
-            }
+            }.exhaustive
         }
 
         private fun createRoom(action: Action.Connection.Create) {
             scope.launch {
                 roomManager.createNewAndObserve(action.roomName, action.gameModeId)
                     .collect {
-                        dispatch(Message.NewUpdate(it))
+                        if (Room.Status(it.status) == Room.Status.Filled) {
+                            dispatch(Message.EnableStartButton)
+                        } else {
+                            dispatch(Message.DisableStartButton)
+                        }
+
+                        dispatch(Message.UserUpdate(it.users.map { it.toProfile() }))
+                        dispatch(Message.NewUpdate(it.toString()))
                     }
             }
         }
@@ -64,14 +82,20 @@ class WaitingRoomStoreProvider(
             scope.launch {
                 roomManager.joinAndObserve(action.roomName)
                     .collect {
-                        dispatch(Message.NewUpdate(it))
+                        dispatch(Message.UserUpdate(it.users.map { it.toProfile() }))
+                        dispatch(Message.NewUpdate(it.toString()))
                     }
             }
         }
 
         override fun executeIntent(intent: Intent, getState: () -> State) {
             when (intent) {
-            }
+                Intent.StartGame -> {
+                    scope.launch {
+                        roomManager.send(WaitingRoomCommand(type = WaitingRoomCommand.Type.StartGame.raw))
+                    }
+                }
+            }.exhaustive
         }
     }
 
@@ -79,6 +103,11 @@ class WaitingRoomStoreProvider(
         override fun State.reduce(msg: Message): State {
             return when (msg) {
                 is Message.NewUpdate -> copy(remoteMessages = this.remoteMessages + "\n" + msg.update)
+                Message.ShowStartButton -> copy(showStartButton = true)
+                Message.EnableStartButton -> copy(enableStartButton = true)
+                Message.DisableStartButton -> copy(enableStartButton = false)
+                is Message.RoomName -> copy(roomName = roomName)
+                is Message.UserUpdate -> copy(users = msg.users.map { it.username })
             }
         }
     }

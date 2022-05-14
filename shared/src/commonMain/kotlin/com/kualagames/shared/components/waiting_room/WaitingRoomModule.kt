@@ -7,7 +7,7 @@ import org.koin.dsl.module
 fun waitingRoomModule(connection: Connection) = module {
     factory { RoomsAPI(get()) }
 
-    factory { RoomManager(get()) }
+    factory { RoomManager(get(), get()) }
 
     factory { WaitingRoomStoreProvider(get(), get()).provide(connection) }
 }
