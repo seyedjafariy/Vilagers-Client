@@ -10,5 +10,7 @@ interface WaitingRoomStore : Store<Intent, WaitingRoomComponent.State, Label> {
     }
 
     sealed interface Label {
+
+        data class OpenGame(val gameId : String) : Label
     }
 }

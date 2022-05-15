@@ -7,6 +7,7 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.kualagames.shared.components.auth.toProfile
 import com.kualagames.shared.components.rooms.Room
+import com.kualagames.shared.components.rooms.RoomDTO
 import com.kualagames.shared.components.waiting_room.WaitingRoomComponent.State
 import com.kualagames.shared.components.waiting_room.WaitingRoomStore.Intent
 import com.kualagames.shared.components.waiting_room.WaitingRoomStore.Label
@@ -72,8 +73,7 @@ class WaitingRoomStoreProvider(
                             dispatch(Message.DisableStartButton)
                         }
 
-                        dispatch(Message.UserUpdate(it.users.map { it.toProfile() }))
-                        dispatch(Message.NewUpdate(it.toString()))
+                        updateRoomDetails(it)
                     }
             }
         }
@@ -82,9 +82,17 @@ class WaitingRoomStoreProvider(
             scope.launch {
                 roomManager.joinAndObserve(action.roomName)
                     .collect {
-                        dispatch(Message.UserUpdate(it.users.map { it.toProfile() }))
-                        dispatch(Message.NewUpdate(it.toString()))
+                        updateRoomDetails(it)
                     }
+            }
+        }
+
+        private fun updateRoomDetails(it: RoomDTO) {
+            dispatch(Message.UserUpdate(it.users.map { it.toProfile() }))
+            dispatch(Message.NewUpdate(it.toString()))
+
+            if (Room.Status(it.status) == Room.Status.Started) {
+                publish(Label.OpenGame(it.gameId!!))
             }
         }
 
@@ -102,10 +110,10 @@ class WaitingRoomStoreProvider(
     private object ReducerImpl : Reducer<State, Message> {
         override fun State.reduce(msg: Message): State {
             return when (msg) {
-                is Message.NewUpdate -> copy(remoteMessages = this.remoteMessages + "\n" + msg.update)
                 Message.ShowStartButton -> copy(showStartButton = true)
                 Message.EnableStartButton -> copy(enableStartButton = true)
                 Message.DisableStartButton -> copy(enableStartButton = false)
+                is Message.NewUpdate -> copy(remoteMessages = this.remoteMessages + "\n" + msg.update)
                 is Message.RoomName -> copy(roomName = roomName)
                 is Message.UserUpdate -> copy(users = msg.users.map { it.username })
             }

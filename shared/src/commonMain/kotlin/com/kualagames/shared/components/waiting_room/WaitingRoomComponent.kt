@@ -20,11 +20,11 @@ interface WaitingRoomComponent {
     val state: Value<State>
 
     data class State(
-        val roomName : String = "",
+        val roomName: String = "",
         val remoteMessages: String = "start",
-        val users : List<String> = emptyList(),
-        val showStartButton : Boolean = false,
-        val enableStartButton : Boolean = false,
+        val users: List<String> = emptyList(),
+        val showStartButton: Boolean = false,
+        val enableStartButton: Boolean = false,
     )
 
     sealed interface Input : Parcelable {
@@ -46,13 +46,19 @@ interface WaitingRoomComponent {
 class WaitingRoomComponentImpl(
     componentContext: ComponentContext,
     parentScope: Scope,
-    input: Input
+    input: Input,
+    openGame: (String) -> Unit,
 ) : DIComponent(componentContext, parentScope, listOf(waitingRoomModule(input.toConnection()))), WaitingRoomComponent {
 
     private val store: WaitingRoomStore = instanceKeeper.getStore {
         get<WaitingRoomStore>()
     }.apply {
-        onNextLabel {
+        onNextLabel { label ->
+            when (label) {
+                is WaitingRoomStore.Label.OpenGame -> {
+                    openGame(label.gameId)
+                }
+            }
 
         } addTo createdDisposables
     }

@@ -9,6 +9,8 @@ import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.parcelable.Parcelable
 import com.arkivanov.essenty.parcelable.Parcelize
 import com.kualagames.shared.components.DIComponent
+import com.kualagames.shared.components.game.GameComponent
+import com.kualagames.shared.components.game.GameComponentImpl
 import com.kualagames.shared.components.main.MainComponent.Child
 import com.kualagames.shared.components.room_name_picker.RoomNamePickerComponent
 import com.kualagames.shared.components.room_name_picker.RoomNamePickerComponentImpl
@@ -26,6 +28,7 @@ interface MainComponent {
         class Rooms(val component: RoomsComponent) : Child
         class RoomNamePicker(val component: RoomNamePickerComponent) : Child
         class WaitingRoom(val component: WaitingRoomComponent) : Child
+        class Game(val component: GameComponent) : Child
     }
 }
 
@@ -62,7 +65,15 @@ class MainComponentImpl(
                         mutableConfigs
                     }
                 })
-            is Config.WaitingRoom -> Child.WaitingRoom(WaitingRoomComponentImpl(componentContext, scope, config.input))
+            is Config.WaitingRoom -> Child.WaitingRoom(WaitingRoomComponentImpl(componentContext, scope, config.input) { gameId ->
+                router.navigate {
+                    val mutableConfigs = it.toMutableList()
+                    mutableConfigs.removeLast()
+                    mutableConfigs.add(Config.Game(gameId))
+                    mutableConfigs
+                }
+            })
+            is Config.Game -> Child.Game(GameComponentImpl(componentContext, scope, GameComponent.Input(config.gameId)))
         }
 
     private sealed interface Config : Parcelable {
@@ -75,5 +86,8 @@ class MainComponentImpl(
 
         @Parcelize
         data class WaitingRoom(val input: WaitingRoomComponent.Input) : Config
+
+        @Parcelize
+        data class Game(val gameId: String) : Config
     }
 }

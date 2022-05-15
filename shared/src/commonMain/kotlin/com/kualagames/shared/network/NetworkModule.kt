@@ -28,6 +28,7 @@ internal val networkModule = module {
             allowSpecialFloatingPointValues = true
             allowStructuredMapKeys = true
             prettyPrint = false
+            ignoreUnknownKeys = true
         }
     }
 
