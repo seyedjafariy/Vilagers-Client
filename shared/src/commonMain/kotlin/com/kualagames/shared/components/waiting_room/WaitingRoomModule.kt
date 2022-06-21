@@ -9,5 +9,5 @@ fun waitingRoomModule(connection: Connection) = module {
 
     factory { RoomManager(get(), get()) }
 
-    factory { WaitingRoomStoreProvider(get(), get()).provide(connection) }
+    factory { WaitingRoomStoreProvider(get(), get(), get()).provide(connection) }
 }

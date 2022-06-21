@@ -12,12 +12,16 @@ import com.kualagames.shared.components.waiting_room.WaitingRoomComponent.State
 import com.kualagames.shared.components.waiting_room.WaitingRoomStore.Intent
 import com.kualagames.shared.components.waiting_room.WaitingRoomStore.Label
 import com.kualagames.shared.model.Profile
+import com.kualagames.shared.model.UserCredentials
+import com.kualagames.shared.storages.UserInfoRepository
 import com.kualagames.shared.utils.exhaustive
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 class WaitingRoomStoreProvider(
     private val storeFactory: StoreFactory,
     private val roomManager: RoomManager,
+    private val userRepo: UserInfoRepository,
 ) {
 
     fun provide(connection: Action.Connection): WaitingRoomStore =
@@ -82,6 +86,14 @@ class WaitingRoomStoreProvider(
             scope.launch {
                 roomManager.joinAndObserve(action.roomName)
                     .collect {
+                        if (it.roomHost.id == userRepo.user.id) {
+                            dispatch(Message.ShowStartButton)
+                            if (Room.Status(it.status) == Room.Status.Filled) {
+                                dispatch(Message.EnableStartButton)
+                            } else {
+                                dispatch(Message.DisableStartButton)
+                            }
+                        }
                         updateRoomDetails(it)
                     }
             }
