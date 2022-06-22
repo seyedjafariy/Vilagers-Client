@@ -9,6 +9,7 @@ interface RoomsStore : Store<Intent, State, Label> {
 
     sealed interface Intent {
         object NewRoom : Intent
+        object Update : Intent
     }
 
     sealed interface Label {
