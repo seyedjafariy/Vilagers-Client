@@ -133,4 +133,8 @@ object Deps {
             val js = "io.ktor:ktor-client-logging-js:${VERSION}"
         }
     }
+
+    object Touchlab {
+        val kermit = "co.touchlab:kermit:1.1.3"
+    }
 }

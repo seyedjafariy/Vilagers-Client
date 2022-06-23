@@ -27,7 +27,7 @@ class GameManager(
             error("another session is already running")
         }
         return callbackFlow {
-            api.joinRoom(roomName) {
+            api.joinGame(roomName) {
                 _session = this
                 handleConnection(this@callbackFlow, this)
             }

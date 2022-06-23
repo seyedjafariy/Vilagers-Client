@@ -23,6 +23,7 @@ kotlin {
                 implementation(Deps.JetBrains.Kotlin.coroutines)
                 implementation(Deps.Squareup.SQLDelight.coroutines)
                 implementation(Deps.Koin.koin)
+                implementation(Deps.Touchlab.kermit)
 
                 implementation(Deps.Ktor.common)
                 implementation(Deps.Ktor.websocket)

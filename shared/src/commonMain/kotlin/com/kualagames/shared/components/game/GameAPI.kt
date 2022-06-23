@@ -8,7 +8,7 @@ class GameAPI(
     private val client : HttpClient
 ) {
 
-    suspend fun joinRoom(gameId: String, session: suspend DefaultWebSocketSession.() -> Unit) {
+    suspend fun joinGame(gameId: String, session: suspend DefaultWebSocketSession.() -> Unit) {
         client.webSocket(urlString = "wss://vilagers.com/api/game/play/$gameId", {}) {
             session()
         }

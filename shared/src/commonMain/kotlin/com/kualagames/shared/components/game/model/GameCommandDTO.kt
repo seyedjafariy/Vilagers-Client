@@ -1,6 +1,7 @@
 package com.kualagames.shared.components.game.model
 
 import com.kualagames.shared.components.auth.UserDTO
+import com.kualagames.shared.model.dto.RoleDTO
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
@@ -27,9 +28,12 @@ sealed class GameCommandDTO(
 
     @Serializable
     data class RevealPlayerRole(
-        val player: UserDTO,
+        val player: PlayerDTO,
         val role: RoleDTO,
     ) : GameCommandDTO("current_user_role")
+
+    @Serializable
+    object HidePlayersRoles: GameCommandDTO("hide_players_roles")
 
     @Serializable
     object Speak : GameCommandDTO("user_speak")

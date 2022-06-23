@@ -4,6 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.kualagames.shared.components.DIComponent
+import com.kualagames.shared.components.game.model.Player
 import com.kualagames.shared.components.waiting_room.WaitingRoomComponent
 import com.kualagames.shared.components.waiting_room.WaitingRoomStore
 import com.kualagames.shared.utils.addTo
@@ -18,7 +19,8 @@ interface GameComponent {
     val state: Value<State>
 
     data class State(
-        val waitingToStartTheGame : Boolean = true
+        val waitingToStartTheGame : Boolean = true,
+        val players : List<Player> = emptyList(),
     )
 
     data class Input(
